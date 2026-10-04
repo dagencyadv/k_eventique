@@ -437,7 +437,7 @@ html.fine,html.fine *{cursor:none!important}
 
 <div id="scrolltrack" aria-hidden="true"></div>
 
-<div id="stage" role="region" aria-label="Interactive archive of 21 projects. Drag to rotate, use arrow keys to turn, Tab to move between projects and Enter to open one.">
+<div id="stage" role="region" aria-label="Interactive archive of 21 projects. Scroll or drag to rotate, use arrow keys to turn, Tab to move between projects and Enter to open one.">
   <div id="world">
     <div id="orb"></div>
     <h1 id="headline"><span class="inner"><span style="--i:0">We</span> <span style="--i:1">Create</span> <span style="--i:2">Moments</span> <span style="--i:3">That</span> <span style="--i:4">Last.</span></span></h1>
@@ -483,7 +483,7 @@ html.fine,html.fine *{cursor:none!important}
 
 <p id="colophon">Luxury Events &amp; Weddings</p>
 
-<div id="cue" aria-hidden="true"><span>Drag to explore</span><i></i></div>
+<div id="cue" aria-hidden="true"><span>Scroll or drag to explore</span><i></i></div>
 
 <button type="button" id="gridbtn" aria-label="Toggle project grid" aria-pressed="false"><i></i><i></i><i></i><i></i></button>
 
@@ -864,7 +864,7 @@ function clampPitch() {
 }
 
 function frame() {
-  if (!dragging) {
+  if (!dragging && !(tsw && tsw.axis === "y")) {
     if (focusTarget) {
       dragX += (focusTarget.x - dragX) * .12;
       dragY += (focusTarget.y - dragY) * .12;
@@ -998,6 +998,47 @@ function endPointer(e, cancelled) {
 stage.addEventListener("pointerup", e => endPointer(e, false));
 stage.addEventListener("pointercancel", e => endPointer(e, true));
 stage.addEventListener("dragstart", e => e.preventDefault());
+
+/* Scroll turns the sphere too: mouse wheel / trackpad on desktop, vertical swipe on touch */
+const SPIN_MAX = 7;
+function spinBy(deg) {
+  focusTarget = null;
+  velX = clamp(velX + deg, -SPIN_MAX, SPIN_MAX);
+  dragTravel += Math.abs(deg) * 4;
+  if (dragTravel > 170) explored = true;
+}
+window.addEventListener("wheel", e => {
+  if (!revealed || overlayOpen() || dragging) return;
+  const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1;
+  const dy = clamp(e.deltaY * unit, -240, 240);
+  if (dy) spinBy(-dy * (reduced.matches ? .004 : .011));
+}, { passive: true });
+let tsw = null;
+stage.addEventListener("touchstart", e => {
+  if (e.touches.length !== 1) { tsw = null; return; }
+  const t = e.touches[0];
+  tsw = { x0: t.clientX, y0: t.clientY, ly: t.clientY, axis: "" };
+}, { passive: true });
+stage.addEventListener("touchmove", e => {
+  if (!tsw || !revealed || overlayOpen() || e.touches.length !== 1) return;
+  const t = e.touches[0];
+  if (!tsw.axis) {
+    const tx = t.clientX - tsw.x0, ty = t.clientY - tsw.y0;
+    if (Math.hypot(tx, ty) < 10) return;
+    tsw.axis = Math.abs(ty) > Math.abs(tx) * 1.15 ? "y" : "x";
+    tsw.ly = t.clientY;
+    return;
+  }
+  if (tsw.axis !== "y") return;
+  const dy = t.clientY - tsw.ly;
+  tsw.ly = t.clientY;
+  dragX -= dy * K * .75;
+  velX = clamp(velX * .4 - dy * K * .75 * .6, -SPIN_MAX, SPIN_MAX);
+  dragTravel += Math.abs(dy * K);
+  if (dragTravel > 170) explored = true;
+}, { passive: true });
+stage.addEventListener("touchend", () => { tsw = null; }, { passive: true });
+stage.addEventListener("touchcancel", () => { tsw = null; }, { passive: true });
 
 /* keyboard on cards */
 function faceCard(i) {
