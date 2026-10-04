@@ -235,7 +235,7 @@ body.menuopen .m-kick{opacity:1;transition-delay:.35s}
   opacity:0;transition:opacity .6s var(--ease);
 }
 body.menuopen .m-foot{opacity:1;transition-delay:.5s}
-.m-contact{display:flex;gap:22px;flex-wrap:wrap}
+.m-contact{display:flex;gap:22px;flex-wrap:wrap;align-items:center;text-transform:none;letter-spacing:.06em}
 .m-contact a{color:var(--ink);opacity:.75;transition:opacity .3s;border-bottom:1px solid transparent}
 .m-contact a:hover{opacity:1;border-color:var(--gold)}
 
@@ -272,7 +272,46 @@ body.panelopen .p-in{transform:none}
 .j-media:hover img{transform:scale(1.04)}
 .j-item h3{font-family:var(--serif);font-weight:400;font-size:clamp(26px,3vw,42px);line-height:1.1;margin:14px 0 16px}
 .j-item p{color:rgba(244,241,235,.7);max-width:46ch}
-.c-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px 48px}
+.c-grid{display:flex;flex-wrap:wrap;gap:32px 72px}
+.c-grid>div{min-width:0;max-width:100%}
+.c-grid dd{overflow-wrap:anywhere}
+.sel{user-select:text;-webkit-user-select:text}
+.soc{display:inline-flex;align-items:center;gap:6px}
+.soc a{display:grid;place-items:center;width:var(--tap);height:var(--tap);margin:-8px 0;color:var(--ink);opacity:.72;border:0!important;transition:opacity .3s,color .3s}
+.soc a:hover,.soc a:focus-visible{opacity:1;color:var(--accent)}
+.soc svg{width:18px;height:18px}
+.soc-lg a{margin:-6px 0 0 -12px}
+.soc-lg svg{width:22px;height:22px}
+.enq{display:grid;gap:30px;margin-top:clamp(40px,5vw,72px);max-width:920px}
+.f-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 44px}
+.f{display:flex;flex-direction:column;gap:8px;min-width:0}
+.f>span{font-size:10px;font-weight:400;letter-spacing:.28em;text-transform:uppercase;color:var(--dim)}
+.f>span i{font-style:normal;letter-spacing:.06em;text-transform:none;opacity:.75}
+.f input,.f select,.f textarea{
+  width:100%;min-width:0;background:transparent;color:var(--ink);border:0;border-bottom:1px solid var(--line);border-radius:0;
+  font-family:var(--serif);font-size:19px;line-height:1.4;padding:10px 0 12px;outline:none;
+  -webkit-appearance:none;appearance:none;transition:border-color .4s;
+}
+.f textarea{resize:vertical;min-height:96px}
+.f select{padding-right:26px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23c9b89a' stroke-width='1.2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 4px center}
+.f select option,.f select optgroup{background:#0b0b0b;color:var(--ink)}
+.f input::placeholder,.f textarea::placeholder{color:rgba(244,241,235,.28)}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--gold)}
+.f [aria-invalid="true"]{border-color:#c4806f}
+.f input:-webkit-autofill{-webkit-text-fill-color:var(--ink);box-shadow:inset 0 0 0 100px var(--bg);caret-color:var(--ink)}
+.f-err{min-height:1em;font-size:13px;color:#d79a8a}
+.f-err:empty{display:none}
+.f-actions{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.f-actions[hidden],.f-done[hidden]{display:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 26px;border-radius:999px;border:1px solid var(--line);font-size:10.5px;font-weight:400;letter-spacing:.24em;text-transform:uppercase;color:var(--ink);transition:background-color .35s,color .35s,border-color .35s}
+.btn:hover{border-color:var(--gold)}
+.btn svg{width:18px;height:18px}
+.btn-solid{background:var(--ink);color:#0a0a0a;border-color:var(--ink)}
+.btn-solid:hover{background:transparent;color:var(--ink)}
+.f-done{display:grid;gap:18px;padding-top:6px}
+.f-done-t{font-family:var(--serif);font-size:clamp(19px,2vw,24px);line-height:1.45;max-width:40ch}
+.f-note{font-size:13px;color:var(--dim)}
+.f-note .sel{color:var(--ink)}
 .c-grid dt{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
 .c-grid dd{font-family:var(--serif);font-size:clamp(19px,1.8vw,24px);line-height:1.4}
 .c-grid dd a{border-bottom:1px solid var(--line);transition:border-color .4s}
@@ -372,6 +411,8 @@ html.fine #dot{
 html.fine #dot.on{opacity:1}
 html.fine #dot.big{width:52px;height:52px;margin:-26px 0 0 -26px}
 html.fine,html.fine *{cursor:none!important}
+html.fine input,html.fine textarea{cursor:text!important}
+html.fine select{cursor:pointer!important}
 
 /* ───────── responsive ───────── */
 @media (max-width:900px){
@@ -386,7 +427,7 @@ html.fine,html.fine *{cursor:none!important}
   .meta{grid-template-columns:1fr}
   .p-lede{grid-template-columns:1fr}
   .p-steps{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .p-cols,.c-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .p-cols{grid-template-columns:repeat(2,minmax(0,1fr))}
   .j-item{grid-template-columns:1fr}
   .j-item:nth-child(even) .j-media{order:0}
 }
@@ -411,7 +452,9 @@ html.fine,html.fine *{cursor:none!important}
   .g-cap{position:static;opacity:1;transform:none;background:none;padding:9px 2px 4px}
   .g-t{font-size:16px}
   .g-filters{gap:18px}
-  .p-cols,.c-grid,.p-steps{grid-template-columns:1fr}
+  .p-cols,.p-steps,.f-row{grid-template-columns:1fr}
+  .c-grid{flex-direction:column;gap:26px}
+  .btn{width:100%}
   .m-foot{flex-direction:column;align-items:center;text-align:center}
   .m-contact{justify-content:center}
 }
@@ -568,10 +611,12 @@ html.fine,html.fine *{cursor:none!important}
 /* ═════════ Central configuration — edit here ═════════ */
 const SITE = {
   brand: "K Eventique",
-  email: "",
-  phone: "",
+  email: "ismael.kaoud@keventique.com",
+  phone: "+20 102 277 7999",            /* WhatsApp number, shown as text */
+  whatsapp: "https://wa.me/201022777999",
   locations: ["Cairo", "Dubai", "Riyadh"],
   instagram: "https://www.instagram.com/k_eventique/",
+  facebook: "https://www.facebook.com/byismaelkaoud",
   /* Intro film — first playable source wins (H.264 copy first, original HEVC as backup) */
   filmPoster: "media/intro-eye-poster.jpg",
   film: [
@@ -724,11 +769,27 @@ const numbering = IMGS.map(it => { counters[it.category] = (counters[it.category
 $$('[data-site="brand"]').forEach(n => { n.textContent = SITE.brand; });
 $$('[data-site="locations"]').forEach(n => { n.textContent = SITE.locations.join(" · "); });
 
+const ICONS = {
+  instagram: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.05" fill="currentColor" stroke="none"/></svg>',
+  facebook: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M13.5 21v-7.5h2.5l.4-3h-2.9V8.6c0-.87.25-1.46 1.5-1.46h1.6V4.46a21 21 0 0 0-2.33-.12c-2.3 0-3.87 1.4-3.87 3.98v2.18H7.8v3h2.6V21z"/></svg>',
+  whatsapp: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M4.4 19.6l1.15-4A8 8 0 1 1 8.6 18.5z"/><path d="M9.2 8.3c.2-.4.5-.5.8-.5h.5c.2 0 .4.1.5.4l.7 1.6c.1.2 0 .5-.1.7l-.5.6c.6 1.2 1.5 2.1 2.7 2.7l.6-.5c.2-.2.5-.2.7-.1l1.6.7c.3.1.4.3.4.5v.5c0 .3-.1.6-.5.8-.6.4-1.4.5-2.2.2-2.1-.8-3.8-2.5-4.6-4.6-.3-.8-.2-1.6.2-2.2z" fill="currentColor" stroke="none"/></svg>'
+};
+function socialLinks(cls) {
+  const items = [
+    ["whatsapp", SITE.whatsapp, "WhatsApp"],
+    ["instagram", SITE.instagram, "Instagram"],
+    ["facebook", SITE.facebook, "Facebook"]
+  ].filter(x => x[1]);
+  return `<span class="${cls}">${items.map(([k, url, label]) =>
+    `<a href="${esc(url)}" target="_blank" rel="noopener" aria-label="${label}" title="${label}">${ICONS[k]}</a>`).join("")}</span>`;
+}
 function contactLinks() {
   const out = [];
   if (SITE.email) out.push(`<a href="mailto:${esc(SITE.email)}">${esc(SITE.email)}</a>`);
-  if (SITE.phone) out.push(`<a href="tel:${esc(SITE.phone.replace(/[^\d+]/g, ""))}">${esc(SITE.phone)}</a>`);
-  if (SITE.instagram) out.push(`<a href="${esc(SITE.instagram)}" target="_blank" rel="noopener">Instagram</a>`);
+  if (SITE.phone) out.push(SITE.whatsapp
+    ? `<a href="${esc(SITE.whatsapp)}" target="_blank" rel="noopener">${esc(SITE.phone)}</a>`
+    : `<span>${esc(SITE.phone)}</span>`);
+  out.push(socialLinks("soc"));
   return out.join("");
 }
 $("#mContact").innerHTML = contactLinks();
@@ -1286,9 +1347,33 @@ const PANELS = {
     </div>`,
   contact: () => {
     const rows = [`<div><dt>Studios</dt><dd>${esc(SITE.locations.join(" · "))}</dd></div>`];
-    if (SITE.email) rows.push(`<div><dt>Email</dt><dd><a href="mailto:${esc(SITE.email)}">${esc(SITE.email)}</a></dd></div>`);
-    if (SITE.phone) rows.push(`<div><dt>Telephone</dt><dd><a href="tel:${esc(SITE.phone.replace(/[^\d+]/g, ""))}">${esc(SITE.phone)}</a></dd></div>`);
-    if (SITE.instagram) rows.push(`<div><dt>Instagram</dt><dd><a href="${esc(SITE.instagram)}" target="_blank" rel="noopener">${esc(igHandle())}</a></dd></div>`);
+    if (SITE.email) rows.push(`<div><dt>Email</dt><dd><a class="sel" href="mailto:${esc(SITE.email)}">${esc(SITE.email)}</a></dd></div>`);
+    if (SITE.phone) rows.push(`<div><dt>WhatsApp</dt><dd>${SITE.whatsapp ? `<a class="sel" href="${esc(SITE.whatsapp)}" target="_blank" rel="noopener">${esc(SITE.phone)}</a>` : `<span class="sel">${esc(SITE.phone)}</span>`}</dd></div>`);
+    rows.push(`<div><dt>Follow</dt><dd>${socialLinks("soc soc-lg")}</dd></div>`);
+    const opts = Object.keys(SERVICES).map(k => `<optgroup label="${esc(k)}">${SERVICES[k].map(s => `<option>${esc(s)}</option>`).join("")}</optgroup>`).join("");
+    const form = `
+    <form class="enq" id="enqForm" novalidate aria-labelledby="enqTitle">
+      <p class="kick" id="enqTitle">Enquiry</p>
+      <div class="f-row">
+        <label class="f" for="enqName"><span>Name</span><input id="enqName" name="name" autocomplete="name" required></label>
+        <label class="f" for="enqEmail"><span>Email</span><input id="enqEmail" name="email" type="email" autocomplete="email" inputmode="email" required></label>
+      </div>
+      <div class="f-row">
+        <label class="f" for="enqPhone"><span>WhatsApp number</span><input id="enqPhone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+20 10 0000 0000" required></label>
+        <label class="f" for="enqService"><span>Service</span><select id="enqService" name="service" required><option value="">Select a service</option>${opts}<option value="Something else">Something else</option></select></label>
+      </div>
+      <label class="f" for="enqNote"><span>The occasion <i>— date, place, guests (optional)</i></span><textarea id="enqNote" name="note" rows="3"></textarea></label>
+      <p class="f-err" id="enqErr" role="alert"></p>
+      <div class="f-actions"><button type="submit" class="btn btn-solid">Continue</button></div>
+      <div class="f-done" id="enqDone" hidden>
+        <p class="f-done-t" id="enqDoneT"></p>
+        <div class="f-actions">
+          ${SITE.whatsapp ? `<a class="btn btn-solid" id="enqWa" target="_blank" rel="noopener">${ICONS.whatsapp}<span>Send on WhatsApp</span></a>` : ""}
+          ${SITE.email ? `<a class="btn" id="enqMail">Send by email</a>` : ""}
+        </div>
+        ${SITE.email ? `<p class="f-note">If your email app does not open, write to <span class="sel">${esc(SITE.email)}</span></p>` : ""}
+      </div>
+    </form>`;
     const lead = (!SITE.email && !SITE.phone && SITE.instagram)
       ? "Enquiries are currently received by direct message on Instagram. Share the date, the place and the feeling you have in mind."
       : "Share the date, the place and the feeling you have in mind. Every enquiry is read by the studio.";
@@ -1297,8 +1382,9 @@ const PANELS = {
     <h2 class="p-h" tabindex="-1">Begin a <em>conversation.</em></h2>
     <div class="p-lede"><p>${esc(lead)}</p><p>We take on a limited number of weddings and events each season, so that every project receives the full attention of the studio.</p></div>
     <div class="p-rule"></div>
-    <dl class="c-grid">${rows.join("")}</dl>
-    ${SITE.instagram ? `<div class="p-actions"><a class="tlink" href="${esc(SITE.instagram)}" target="_blank" rel="noopener">Write to us on Instagram</a></div>` : ""}`;
+    ${form}
+    <div class="p-rule"></div>
+    <dl class="c-grid">${rows.join("")}</dl>`;
   }
 };
 let panelReturn = null;
@@ -1322,6 +1408,44 @@ function closePanel() {
   panel.setAttribute("aria-hidden", "true");
   setCurrent("experience");
 }
+function enquiryText(d) {
+  return [`Hello ${SITE.brand},`, "", `Name: ${d.name}`, `Email: ${d.email}`, `WhatsApp: ${d.phone}`, `Service: ${d.service}`]
+    .concat(d.note ? ["", d.note] : []).join("\n");
+}
+panelBody.addEventListener("submit", e => {
+  const f = e.target.closest("#enqForm");
+  if (!f) return;
+  e.preventDefault();
+  const v = id => $("#" + id, f).value.trim();
+  const d = { name: v("enqName"), email: v("enqEmail"), phone: v("enqPhone"), service: v("enqService"), note: v("enqNote") };
+  const bad = [];
+  if (!d.name) bad.push(["enqName", "your name"]);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email)) bad.push(["enqEmail", "a valid email"]);
+  if (d.phone.replace(/\D/g, "").length < 8) bad.push(["enqPhone", "a WhatsApp number with country code"]);
+  if (!d.service) bad.push(["enqService", "the service you need"]);
+  ["enqName", "enqEmail", "enqPhone", "enqService"].forEach(id => $("#" + id, f).removeAttribute("aria-invalid"));
+  const err = $("#enqErr", f);
+  if (bad.length) {
+    bad.forEach(([id]) => $("#" + id, f).setAttribute("aria-invalid", "true"));
+    err.textContent = "Please add " + bad.map(b => b[1]).join(", ") + ".";
+    $("#" + bad[0][0], f).focus();
+    return;
+  }
+  err.textContent = "";
+  const text = enquiryText(d);
+  const wa = $("#enqWa", f), mail = $("#enqMail", f);
+  if (wa) wa.href = `${SITE.whatsapp}${SITE.whatsapp.includes("?") ? "&" : "?"}text=${encodeURIComponent(text)}`;
+  if (mail) mail.href = `mailto:${SITE.email}?subject=${encodeURIComponent("Enquiry — " + d.service)}&body=${encodeURIComponent(text)}`;
+  $("#enqDoneT", f).textContent = `Thank you, ${d.name.split(" ")[0]}. Your enquiry is ready — send it to the studio on WhatsApp or by email.`;
+  $(".f-actions", f).hidden = true;
+  $("#enqDone", f).hidden = false;
+  (wa || mail).focus({ preventScroll: true });
+});
+panelBody.addEventListener("input", e => {
+  if (e.target.matches("#enqForm [aria-invalid]")) e.target.removeAttribute("aria-invalid");
+  const f = e.target.closest("#enqForm");
+  if (f && !$("#enqDone", f).hidden) { $("#enqDone", f).hidden = true; $(".f-actions", f).hidden = false; }
+});
 panelBody.addEventListener("click", e => {
   const a = e.target.closest("[data-act],[data-open]");
   if (!a) return;
@@ -1384,6 +1508,7 @@ document.addEventListener("keydown", e => {
     if (e.key === "Escape" && splashDone) finishIntro();
     return;
   }
+  if (e.key === "Escape" && e.target.matches && e.target.matches("input,textarea,select")) { e.target.blur(); return; }
   if (e.key === "Escape") {
     if (lit.classList.contains("open")) closeLit();
     else if (body.classList.contains("menuopen")) setMenu(false);
