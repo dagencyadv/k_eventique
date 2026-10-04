@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>K Eventique — Luxury Events &amp; Weddings</title>
+<meta name="description" content="K Eventique creates exceptional luxury weddings, private celebrations, corporate events and immersive experiences through thoughtful design, production and event direction.">
+<meta name="theme-color" content="#050505">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050505;
+  --ink:#f4f1eb;
+  --dim:#8e8981;
+  --line:rgba(244,241,235,.24);
+  --accent:#c9b89a;
+  --gold:#c8b28a;
+  --pad:clamp(14px,2.6vw,34px);
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --hw:min(56vw,640px);
+  --persp:1150px;
+  --tap:44px;
+  --safe-top:env(safe-area-inset-top);
+  --safe-right:env(safe-area-inset-right);
+  --safe-bottom:env(safe-area-inset-bottom);
+  --safe-left:env(safe-area-inset-left);
+  --serif:"Playfair Display","Times New Roman",serif;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --cw:200px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{background:#050505;scrollbar-gutter:stable;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-weight:300;font-size:15px;line-height:1.6;
+  overflow-x:hidden;min-height:100vh;min-height:100dvh;overscroll-behavior-y:none;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;
+}
+body.locked{overflow:hidden;height:100vh;height:100dvh}
+body.lit,body.menuopen,body.gridview,body.panelopen{overflow:hidden}
+img{display:block;max-width:100%}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;text-align:inherit;letter-spacing:inherit}
+a{color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}
+ul{list-style:none}
+:focus{outline:none}
+:focus-visible{outline:1px solid var(--gold);outline-offset:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+.kick{font-family:var(--sans);font-weight:400;font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--dim)}
+
+/* ───────── scroll track & stage ───────── */
+#scrolltrack{height:116vh;pointer-events:none}
+#stage{
+  position:fixed;inset:0;overflow:hidden;
+  perspective:var(--persp);perspective-origin:50% 50%;
+  z-index:10;touch-action:none;
+  user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;
+}
+@media (pointer:coarse){#stage{touch-action:pan-y}}
+#world{position:absolute;top:50%;left:50%;width:0;height:0;transform-style:preserve-3d;will-change:transform}
+#orb{position:absolute;top:0;left:0;width:0;height:0;transform-style:preserve-3d;opacity:1;transform:none}
+
+#headline{
+  position:absolute;top:0;left:0;
+  width:var(--hw);margin-left:calc(var(--hw) / -2);
+  text-align:center;font-family:var(--serif);font-weight:400;
+  font-size:clamp(25px,3.7vw,55px);line-height:1.06;letter-spacing:-.005em;
+  color:#fff;text-shadow:0 2px 34px rgba(0,0,0,.55);
+  pointer-events:none;user-select:none;-webkit-user-select:none;
+  transform-style:preserve-3d;
+}
+#headline .inner{position:absolute;top:0;left:0;width:100%;transform:translateY(-50%)}
+#headline .inner span{
+  display:inline-block;opacity:0;transform:translateY(.42em);filter:blur(7px);
+  transition:opacity 1.3s var(--ease),transform 1.5s var(--ease),filter 1.3s var(--ease);
+  transition-delay:calc(.9s + var(--i) * .085s);
+}
+body.revealed #headline .inner span{opacity:1;transform:none;filter:blur(0)}
+
+/* cards */
+.card{
+  position:absolute;top:0;left:0;
+  width:var(--cw);height:calc(var(--cw) / 1.5);
+  margin-left:calc(var(--cw) / -2);margin-top:calc(var(--cw) / -3);
+  cursor:pointer;
+}
+.card.tall{height:calc(var(--cw) * 1.25);margin-top:calc(var(--cw) * -.625)}
+.card figure{position:relative;width:100%;height:100%;overflow:hidden;background:#0a0a0a;border-radius:3px;transition:transform .5s var(--ease)}
+.card figure::after{
+  content:"";position:absolute;inset:0;background:rgba(0,0,0,var(--d,0));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);border-radius:3px;pointer-events:none;
+}
+.card img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s var(--ease);filter:saturate(.86) contrast(1.03);-webkit-user-drag:none}
+.card.ready img{opacity:1}
+@media (hover:hover){.card:hover figure{transform:scale(1.045)}}
+.card:focus-visible{outline:none}
+.card:focus-visible figure{box-shadow:0 0 0 1px var(--gold)}
+
+.vig{position:fixed;inset:0;z-index:12;pointer-events:none;background:radial-gradient(ellipse 75% 70% at 50% 50%,rgba(5,5,5,0) 45%,rgba(5,5,5,.55) 80%,rgba(5,5,5,.9) 100%)}
+
+/* ───────── chrome ───────── */
+#top{
+  position:fixed;top:0;left:0;right:0;z-index:60;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:calc(var(--pad) + var(--safe-top)) calc(var(--pad) + var(--safe-right)) 0 calc(var(--pad) + var(--safe-left));
+  mix-blend-mode:difference;color:#fff;
+  opacity:0;pointer-events:none;transition:opacity 1.2s var(--ease) .35s;
+}
+body.revealed #top{opacity:1;pointer-events:auto}
+body.menuopen #top{mix-blend-mode:normal;z-index:85}
+.logo{font-family:var(--serif);font-weight:400;font-size:21px;letter-spacing:.005em;min-height:var(--tap);display:flex;align-items:center}
+.menubtn{display:flex;align-items:center;gap:12px;min-height:var(--tap);font-size:10.5px;font-weight:400;letter-spacing:.26em;text-transform:uppercase}
+.menubtn .ico{position:relative;width:22px;height:8px}
+.menubtn .ico i{position:absolute;left:0;right:0;height:1px;background:currentColor;transition:transform .6s var(--ease),top .6s var(--ease)}
+.menubtn .ico i:first-child{top:0}
+.menubtn .ico i:last-child{top:7px}
+body.menuopen .menubtn .ico i:first-child{top:3.5px;transform:rotate(18deg)}
+body.menuopen .menubtn .ico i:last-child{top:3.5px;transform:rotate(-18deg)}
+
+#bio,#colophon,#cue,#gridbtn{opacity:0;pointer-events:none;transition:opacity .9s var(--ease),transform .9s var(--ease)}
+#bio{
+  position:fixed;z-index:55;
+  left:calc(var(--pad) + var(--safe-left));bottom:calc(var(--pad) + var(--safe-bottom));
+  max-width:340px;
+}
+body.revealed #bio{opacity:1;pointer-events:auto;transition-delay:.6s}
+body.revealed.deep #bio,body.revealed.gridview #bio,body.revealed.lit #bio,body.revealed.menuopen #bio,body.revealed.panelopen #bio{opacity:0;pointer-events:none;transform:translateY(8px);transition-delay:0s}
+.bio-row{display:flex;align-items:center;gap:14px}
+.mono{
+  flex:none;width:52px;height:52px;display:grid;place-items:center;
+  font-family:var(--serif);font-size:24px;line-height:1;color:var(--ink);
+  border:1px solid var(--line);position:relative;
+}
+.mono::after{content:"";position:absolute;right:-1px;bottom:-1px;width:7px;height:1px;background:var(--gold);opacity:.8}
+.bio-name{font-family:var(--serif);font-size:17px;line-height:1.2}
+.bio-pos{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);margin-top:4px}
+.bio-p{margin-top:14px;font-family:var(--serif);font-style:italic;font-size:14px;line-height:1.55;color:rgba(244,241,235,.72)}
+
+#colophon{
+  position:fixed;z-index:55;right:calc(var(--pad) + var(--safe-right));bottom:calc(var(--pad) + var(--safe-bottom));
+  font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--dim);
+  display:flex;align-items:center;gap:12px;
+}
+#colophon::before{content:"";width:24px;height:1px;background:var(--gold);opacity:.55}
+body.revealed #colophon{opacity:1;transition-delay:.8s}
+body.revealed.lit #colophon,body.revealed.menuopen #colophon,body.revealed.panelopen #colophon,body.revealed.gridview #colophon{opacity:0;transition-delay:0s}
+
+#cue{
+  position:fixed;z-index:55;left:50%;bottom:calc(var(--pad) + var(--safe-bottom) + 6px);
+  transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;
+  font-size:9.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--dim);
+}
+#cue i{position:relative;display:block;width:56px;height:1px;background:var(--line);overflow:hidden}
+#cue i::after{content:"";position:absolute;top:0;left:0;width:18px;height:1px;background:var(--ink);animation:cue 2.6s var(--ease) infinite}
+@keyframes cue{0%{transform:translateX(-20px)}60%,100%{transform:translateX(60px)}}
+body.revealed #cue{opacity:1;transition-delay:1.6s}
+body.revealed.deep #cue,body.revealed.gridview #cue,body.revealed.lit #cue,body.revealed.menuopen #cue,body.revealed.panelopen #cue{opacity:0;transition-delay:0s}
+
+#gridbtn{
+  position:fixed;z-index:56;left:calc(var(--pad) + var(--safe-left) - 12px);bottom:calc(var(--pad) + var(--safe-bottom) - 12px);
+  width:var(--tap);height:var(--tap);display:grid;grid-template-columns:7px 7px;grid-template-rows:7px 7px;gap:4px;
+  place-content:center;
+}
+#gridbtn i{display:block;border:1px solid var(--ink);transition:transform .6s var(--ease),background-color .4s,border-color .4s}
+#gridbtn:hover i{border-color:var(--gold)}
+body.revealed.deep #gridbtn,body.revealed.gridview #gridbtn{opacity:1;pointer-events:auto}
+body.revealed.lit #gridbtn,body.revealed.menuopen #gridbtn,body.revealed.panelopen #gridbtn{opacity:0;pointer-events:none}
+body.gridview #gridbtn i:nth-child(1){transform:translate(2px,2px);background:var(--ink)}
+body.gridview #gridbtn i:nth-child(4){transform:translate(-2px,-2px);background:var(--ink)}
+
+/* ───────── flat grid ───────── */
+#grid{
+  position:fixed;inset:0;z-index:20;background:#000;
+  overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .7s var(--ease),visibility 0s linear .7s;
+}
+body.gridview #grid{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .7s var(--ease),visibility 0s}
+.g-wrap{max-width:1680px;margin:0 auto;padding:calc(110px + var(--safe-top)) calc(var(--pad) + var(--safe-right)) calc(110px + var(--safe-bottom)) calc(var(--pad) + var(--safe-left))}
+.g-head{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:24px 48px;align-items:end;margin-bottom:clamp(36px,5vw,64px)}
+.g-title{font-family:var(--serif);font-weight:400;font-size:clamp(34px,5vw,74px);line-height:1;margin-top:14px}
+.g-sub{color:rgba(244,241,235,.66);max-width:44ch;font-size:14px}
+.g-filters{display:flex;gap:26px;grid-column:1 / -1;border-top:1px solid rgba(244,241,235,.12);padding-top:18px}
+.g-filters button{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--dim);min-height:var(--tap);position:relative;transition:color .4s}
+.g-filters button::after{content:"";position:absolute;left:0;bottom:10px;width:100%;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+.g-filters button:hover,.g-filters button[aria-pressed="true"]{color:var(--ink)}
+.g-filters button[aria-pressed="true"]::after{transform:scaleX(1)}
+.g-services{grid-column:1 / -1;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px 48px}
+.g-services:empty{display:none}
+.svc h3{font-weight:400;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.svc li{font-family:var(--serif);font-size:17px;line-height:1.75;color:rgba(244,241,235,.85)}
+.g-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:clamp(10px,1.4vw,20px)}
+.g-item{display:block;position:relative;text-align:left;opacity:0;transform:translateY(14px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+body.gridview .g-item{opacity:1;transform:none;transition-delay:calc(.12s + var(--k,0) * .025s)}
+.g-item[hidden]{display:none}
+.g-img{display:block;position:relative;overflow:hidden;background:#0a0a0a;border-radius:2px}
+.g-img img{width:100%;aspect-ratio:3/2;object-fit:cover;opacity:.82;transition:transform .9s var(--ease),opacity .6s var(--ease);filter:saturate(.86) contrast(1.03)}
+.g-item:hover .g-img img,.g-item:focus-visible .g-img img{transform:scale(1.05);opacity:1}
+.g-cap{position:absolute;left:0;right:0;bottom:0;padding:44px 16px 14px;background:linear-gradient(to top,rgba(0,0,0,.78),rgba(0,0,0,0));display:flex;flex-direction:column;gap:3px;opacity:0;transform:translateY(6px);transition:opacity .5s var(--ease),transform .5s var(--ease);pointer-events:none}
+.g-item:hover .g-cap,.g-item:focus-visible .g-cap{opacity:1;transform:none}
+.g-cat{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent)}
+.g-t{font-family:var(--serif);font-size:19px;line-height:1.2}
+.g-place{font-family:var(--serif);font-style:italic;font-size:13px;color:rgba(244,241,235,.7)}
+@media (hover:none){.g-cap{position:static;opacity:1;transform:none;background:none;padding:10px 2px 4px}}
+
+/* ───────── menu ───────── */
+#menu{
+  position:fixed;inset:0;z-index:80;background:#000;
+  clip-path:inset(0 0 100% 0);-webkit-clip-path:inset(0 0 100% 0);
+  visibility:hidden;pointer-events:none;
+  transition:clip-path .85s ease,-webkit-clip-path .85s ease,visibility 0s linear .85s;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:calc(90px + var(--safe-top)) var(--pad) calc(30px + var(--safe-bottom));
+  overflow-y:auto;
+}
+body.menuopen #menu{clip-path:inset(0);-webkit-clip-path:inset(0);visibility:visible;pointer-events:auto;transition:clip-path .85s ease,-webkit-clip-path .85s ease,visibility 0s}
+.m-list{text-align:center;margin:18px 0 auto;margin-top:auto}
+.m-list li{overflow:hidden}
+.m-list button{
+  font-family:var(--serif);font-weight:400;font-size:clamp(34px,6.2vw,84px);line-height:1.12;letter-spacing:-.01em;
+  opacity:.55;transform:translateY(100%);transition:opacity .45s var(--ease),transform .9s var(--ease);
+  padding:2px 10px;
+}
+body.menuopen .m-list button{transform:none;transition-delay:0s,calc(.18s + var(--k) * .05s)}
+.m-list button:hover,.m-list button:focus-visible{opacity:1}
+.m-list button[aria-current="true"]{opacity:1}
+.m-list button[aria-current="true"]::after{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);vertical-align:middle;margin-left:14px;transform:translateY(-.2em)}
+.m-kick{margin-bottom:22px;opacity:0;transition:opacity .6s var(--ease)}
+body.menuopen .m-kick{opacity:1;transition-delay:.35s}
+.m-foot{
+  width:100%;max-width:1680px;margin-top:auto;padding-top:40px;
+  display:flex;justify-content:space-between;align-items:flex-end;gap:16px 32px;flex-wrap:wrap;
+  font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);
+  opacity:0;transition:opacity .6s var(--ease);
+}
+body.menuopen .m-foot{opacity:1;transition-delay:.5s}
+.m-contact{display:flex;gap:22px;flex-wrap:wrap}
+.m-contact a{color:var(--ink);opacity:.75;transition:opacity .3s;border-bottom:1px solid transparent}
+.m-contact a:hover{opacity:1;border-color:var(--gold)}
+
+/* ───────── panels (studio, journal, contact) ───────── */
+#panel{
+  position:fixed;inset:0;z-index:58;background:var(--bg);
+  overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+  opacity:0;visibility:hidden;pointer-events:none;transition:opacity .7s var(--ease),visibility 0s linear .7s;
+}
+body.panelopen #panel{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .7s var(--ease),visibility 0s}
+.p-in{max-width:1240px;margin:0 auto;padding:calc(130px + var(--safe-top)) calc(var(--pad) + var(--safe-right)) calc(100px + var(--safe-bottom)) calc(var(--pad) + var(--safe-left));transform:translateY(16px);transition:transform 1s var(--ease)}
+body.panelopen .p-in{transform:none}
+.p-h{font-family:var(--serif);font-weight:400;font-size:clamp(36px,5.6vw,86px);line-height:1.02;letter-spacing:-.01em;margin:18px 0 0;max-width:15ch}
+.p-h em{font-style:italic;color:rgba(244,241,235,.78)}
+.p-lede{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px 56px;margin-top:clamp(36px,5vw,72px);color:rgba(244,241,235,.72);font-size:15px;line-height:1.75}
+.p-rule{height:1px;background:rgba(244,241,235,.12);margin:clamp(48px,6vw,88px) 0 28px;position:relative}
+.p-rule::before{content:"";position:absolute;left:0;top:0;width:36px;height:1px;background:var(--gold);opacity:.7}
+.p-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px 48px}
+.p-steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:28px 32px}
+.p-steps li span{display:block;font-size:10px;letter-spacing:.3em;color:var(--accent);margin-bottom:10px}
+.p-steps li b{display:block;font-family:var(--serif);font-weight:400;font-size:20px;margin-bottom:6px}
+.p-steps li p{font-size:13px;color:rgba(244,241,235,.6);line-height:1.6}
+.p-quote{font-family:var(--serif);font-style:italic;font-size:clamp(22px,2.6vw,34px);line-height:1.35;max-width:28ch;color:rgba(244,241,235,.86)}
+.p-actions{display:flex;gap:34px;flex-wrap:wrap;margin-top:40px}
+.tlink{display:inline-flex;align-items:center;gap:12px;min-height:var(--tap);font-size:10.5px;font-weight:400;letter-spacing:.26em;text-transform:uppercase;border-bottom:1px solid var(--line);transition:border-color .4s,color .4s}
+.tlink:hover{border-color:var(--gold)}
+.tlink::after{content:"";width:18px;height:1px;background:currentColor;transition:width .5s var(--ease)}
+.tlink:hover::after{width:30px}
+.j-list{display:grid;gap:clamp(48px,6vw,90px);margin-top:clamp(40px,5vw,80px)}
+.j-item{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:24px 56px;align-items:center}
+.j-item:nth-child(even) .j-media{order:2}
+.j-media{display:block;overflow:hidden;border-radius:2px;background:#0a0a0a}
+.j-media img{width:100%;aspect-ratio:3/2;object-fit:cover;filter:saturate(.86) contrast(1.03);transition:transform 1.1s var(--ease)}
+.j-media:hover img{transform:scale(1.04)}
+.j-item h3{font-family:var(--serif);font-weight:400;font-size:clamp(26px,3vw,42px);line-height:1.1;margin:14px 0 16px}
+.j-item p{color:rgba(244,241,235,.7);max-width:46ch}
+.c-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px 48px}
+.c-grid dt{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.c-grid dd{font-family:var(--serif);font-size:clamp(19px,1.8vw,24px);line-height:1.4}
+.c-grid dd a{border-bottom:1px solid var(--line);transition:border-color .4s}
+.c-grid dd a:hover{border-color:var(--gold)}
+
+/* ───────── lightbox ───────── */
+#lit{position:fixed;inset:0;z-index:90;visibility:hidden;pointer-events:none}
+#lit.open{visibility:visible;pointer-events:auto}
+#lit .scrim{position:absolute;inset:0;width:100%;height:100%;background:rgba(5,5,5,.38);opacity:0;transition:opacity .6s var(--ease);cursor:default}
+#lit.open .scrim{opacity:1}
+#lit.closing .scrim{opacity:0}
+.spread{
+  position:relative;min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:calc(96px + var(--safe-top)) var(--pad) calc(48px + var(--safe-bottom));pointer-events:none;
+}
+.plate{
+  position:relative;pointer-events:auto;
+  width:min(72vw,860px,(100vh - 230px) * 1.5);
+  box-shadow:0 30px 90px rgba(0,0,0,.75);background:#0a0a0a;border-radius:2px;overflow:hidden;
+  will-change:transform;
+}
+.plate.tall{width:min(46vw,520px,(100vh - 230px) * .8)}
+.plate img{width:100%;aspect-ratio:3/2;object-fit:cover;filter:saturate(.86) contrast(1.03)}
+.plate.tall img{aspect-ratio:4/5}
+.plate .close{
+  position:absolute;top:14px;right:14px;min-height:36px;padding:0 16px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.55);background:rgba(0,0,0,.18);
+  font-size:10px;font-weight:400;letter-spacing:.24em;text-transform:uppercase;color:#fff;
+  opacity:0;transition:opacity .5s var(--ease),border-color .3s,background-color .3s;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+}
+.plate .close::before{content:"";position:absolute;inset:-6px}
+.plate .close:hover{border-color:var(--gold);background:rgba(0,0,0,.35)}
+#lit.open:not(.closing) .plate .close{opacity:1;transition-delay:.45s}
+.meta{
+  pointer-events:auto;width:min(72vw,860px,(100vh - 230px) * 1.5);margin-top:22px;
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:18px 40px;
+  opacity:0;transform:translateY(10px);transition:opacity .6s var(--ease),transform .7s var(--ease);
+}
+.plate.tall + .meta{width:min(72vw,860px)}
+#lit.open:not(.closing) .meta{opacity:1;transform:none;transition-delay:.38s}
+#lit.closing .meta{transition-duration:.2s}
+.meta h2{font-family:var(--serif);font-weight:400;font-size:clamp(24px,2.4vw,34px);line-height:1.1;margin:10px 0 6px}
+.meta .where{font-family:var(--serif);font-style:italic;font-size:15px;color:rgba(244,241,235,.7)}
+.meta .note{font-family:var(--serif);font-size:16px;line-height:1.65;color:rgba(244,241,235,.84);padding-top:4px;border-top:1px solid rgba(244,241,235,.12);padding-top:14px}
+.meta .nav{display:flex;gap:22px;margin-top:14px}
+.meta .nav button{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--dim);min-height:36px;transition:color .3s}
+.meta .nav button:hover{color:var(--ink)}
+
+/* ───────── intro & splash ───────── */
+#intro{position:fixed;inset:0;z-index:200;background:#000;transition:opacity 1s var(--ease)}
+#intro.gone{opacity:0;pointer-events:none}
+#intro .fallback{
+  position:absolute;inset:0;opacity:0;transition:opacity 1.2s var(--ease);
+  background:radial-gradient(120% 90% at 50% 46%,#1a1612 0%,#0d0b0a 42%,#050505 78%);
+  display:grid;place-items:center;
+}
+#intro .fallback p{font-family:var(--serif);font-style:italic;font-size:clamp(18px,2.2vw,28px);color:rgba(244,241,235,.75);text-align:center;padding:0 24px;opacity:0;transform:translateY(8px);transition:opacity 1.4s var(--ease) .3s,transform 1.4s var(--ease) .3s}
+#intro.nofilm .fallback,#intro.nofilm .fallback p{opacity:1;transform:none}
+#film{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.1s var(--ease);filter:saturate(.72) contrast(1.06) brightness(.8);background:#000}
+#film.on{opacity:1}
+#intro::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 80% 75% at 50% 50%,rgba(0,0,0,0) 50%,rgba(0,0,0,.6) 100%),linear-gradient(to bottom,rgba(0,0,0,.35),rgba(0,0,0,0) 22%,rgba(0,0,0,0) 78%,rgba(0,0,0,.45))}
+#intro .film-mark{position:absolute;z-index:2;left:calc(var(--pad) + var(--safe-left));bottom:calc(var(--pad) + var(--safe-bottom) + 10px);font-family:var(--serif);font-size:15px;color:rgba(255,255,255,.82);opacity:0;transition:opacity 1s var(--ease)}
+#intro .film-mark span{font-family:var(--sans);font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-left:12px}
+#intro.ready .film-mark{opacity:1}
+#intro .veil{position:absolute;inset:0;z-index:3;background:#000;opacity:0;pointer-events:none;transition:opacity .7s var(--ease)}
+#intro.closing .veil{opacity:1}
+#skip{
+  position:absolute;z-index:4;right:calc(var(--pad) + var(--safe-right));bottom:calc(var(--pad) + var(--safe-bottom));
+  min-height:var(--tap);padding:0 20px;border-radius:999px;border:1px solid rgba(255,255,255,.32);
+  font-size:10px;font-weight:400;letter-spacing:.26em;text-transform:uppercase;color:#fff;
+  opacity:0;pointer-events:none;transition:opacity .6s var(--ease),border-color .3s;
+}
+#skip:hover{border-color:rgba(255,255,255,.75)}
+#intro.ready #skip{opacity:1;pointer-events:auto}
+#intro.closing #skip{opacity:0;pointer-events:none}
+
+#splash{position:fixed;inset:0;z-index:250;background:#000;display:flex;align-items:center;justify-content:center;transition:opacity .9s var(--ease)}
+#splash.out{opacity:0;pointer-events:none}
+.sp{display:flex;flex-direction:column;align-items:center;text-align:center}
+.sp-mark{font-family:var(--serif);font-weight:400;font-size:clamp(32px,4.4vw,54px);line-height:1;letter-spacing:.005em;animation:spIn 1.4s var(--ease) both}
+.sp-sub{margin-top:16px;font-size:9.5px;font-weight:400;letter-spacing:.38em;text-transform:uppercase;color:var(--dim);padding-left:.38em;animation:spIn 1.4s var(--ease) .2s both}
+.sp-bar{position:relative;margin-top:30px;width:132px;height:1px;background:rgba(244,241,235,.14);overflow:hidden}
+.sp-bar i{position:absolute;inset:0;background:rgba(244,241,235,.86);transform:scaleX(0);transform-origin:left center;transition:transform .6s var(--ease)}
+@keyframes spIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ───────── cursor ───────── */
+#dot{display:none}
+html.fine #dot{
+  display:block;position:fixed;top:0;left:0;z-index:300;width:19px;height:19px;margin:-9.5px 0 0 -9.5px;
+  border-radius:50%;background:#fff;mix-blend-mode:difference;pointer-events:none;opacity:0;
+  transition:width .35s ease,height .35s ease,margin .35s ease,opacity .3s ease;will-change:transform;
+}
+html.fine #dot.on{opacity:1}
+html.fine #dot.big{width:52px;height:52px;margin:-26px 0 0 -26px}
+html.fine,html.fine *{cursor:none!important}
+
+/* ───────── responsive ───────── */
+@media (max-width:900px){
+  :root{--persp:920px}
+  #bio{max-width:290px}
+  .bio-p{font-size:13px}
+  .g-list{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+  .g-head{grid-template-columns:1fr}
+  .plate,.meta{width:min(86vw,720px,(100vh - 260px) * 1.5)}
+  .plate.tall{width:min(62vw,460px,(100vh - 260px) * .8)}
+  .plate.tall + .meta{width:min(86vw,720px)}
+  .meta{grid-template-columns:1fr}
+  .p-lede{grid-template-columns:1fr}
+  .p-steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .p-cols,.c-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .j-item{grid-template-columns:1fr}
+  .j-item:nth-child(even) .j-media{order:0}
+}
+@media (max-width:768px){
+  #colophon{display:none}
+  #headline{font-size:clamp(24px,5.2vw,40px)}
+  .m-list button{font-size:clamp(30px,8vw,56px)}
+  #bio{right:calc(var(--pad) + var(--safe-right));max-width:none}
+}
+@media (max-width:640px){
+  :root{--hw:min(84vw,360px);--pad:clamp(12px,4vw,18px);--persp:760px}
+  #headline{font-size:clamp(22px,6.6vw,30px)}
+  .mono{width:42px;height:42px;font-size:20px}
+  .bio-p{margin-top:10px;font-size:12.5px}
+  #cue{display:none}
+  #lit{overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  #lit .scrim{position:fixed}
+  .spread{justify-content:flex-start;padding:calc(72px + var(--safe-top)) calc(var(--pad) + var(--safe-right)) calc(40px + var(--safe-bottom)) calc(var(--pad) + var(--safe-left))}
+  .plate,.meta,.plate.tall + .meta{width:100%}
+  .plate.tall{width:min(100%,(100vh - 200px) * .8)}
+  .g-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .g-cap{position:static;opacity:1;transform:none;background:none;padding:9px 2px 4px}
+  .g-t{font-size:16px}
+  .g-filters{gap:18px}
+  .p-cols,.c-grid,.p-steps{grid-template-columns:1fr}
+  .m-foot{flex-direction:column;align-items:center;text-align:center}
+  .m-contact{justify-content:center}
+}
+@media (max-width:380px){
+  :root{--hw:min(88vw,320px);--persp:620px}
+  .g-list{grid-template-columns:1fr}
+  .bio-p{display:none}
+  .m-list button{font-size:clamp(24px,10vw,40px)}
+}
+@media (orientation:landscape) and (max-height:520px){
+  #bio,#colophon,#cue{display:none}
+  #headline{font-size:clamp(20px,3.4vw,32px)}
+  .spread{padding-top:calc(58px + var(--safe-top))}
+  .plate,.meta{width:min(72vw,640px,(100vh - 120px) * 1.5)}
+  .plate.tall{width:min(40vw,(100vh - 120px) * .8)}
+  #lit{overflow-y:auto}
+  .m-list button{font-size:clamp(24px,5vw,40px)}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.14s!important;transition-delay:0s!important;scroll-behavior:auto!important}
+  #headline .inner span{filter:none}
+}
+</style>
+</head>
+<body class="locked">
+
+<div id="scrolltrack" aria-hidden="true"></div>
+
+<div id="stage" role="region" aria-label="Interactive archive of 21 projects. Drag to rotate, use arrow keys to turn, Tab to move between projects and Enter to open one.">
+  <div id="world">
+    <div id="orb"></div>
+    <h1 id="headline"><span class="inner"><span style="--i:0">We</span> <span style="--i:1">Create</span> <span style="--i:2">Moments</span> <span style="--i:3">That</span> <span style="--i:4">Last.</span></span></h1>
+  </div>
+</div>
+
+<div class="vig" aria-hidden="true"></div>
+
+<section id="grid" aria-label="Project archive" aria-hidden="true" inert>
+  <div class="g-wrap">
+    <header class="g-head">
+      <div>
+        <p class="kick" id="gKick">Selected Work</p>
+        <h2 class="g-title" id="gTitle">The Archive</h2>
+      </div>
+      <p class="g-sub" id="gSub"></p>
+      <div class="g-filters" role="group" aria-label="Filter the archive">
+        <button type="button" data-f="all" aria-pressed="true">All</button>
+        <button type="button" data-f="weddings" aria-pressed="false">Weddings</button>
+        <button type="button" data-f="events" aria-pressed="false">Events</button>
+      </div>
+      <div class="g-services" id="gServices"></div>
+    </header>
+    <div class="g-list" id="gList"></div>
+  </div>
+</section>
+
+<header id="top">
+  <button type="button" class="logo" id="logo" aria-label="K Eventique, return to the experience"><span data-site="brand">K Eventique</span></button>
+  <button type="button" class="menubtn" id="menuBtn" aria-expanded="false" aria-controls="menu"><span class="lbl">Menu</span><span class="ico" aria-hidden="true"><i></i><i></i></span></button>
+</header>
+
+<aside id="bio" aria-label="About the studio">
+  <div class="bio-row">
+    <div class="mono" aria-hidden="true">K</div>
+    <div>
+      <p class="bio-name" data-site="brand">K Eventique</p>
+      <p class="bio-pos">Luxury Events &amp; Weddings</p>
+    </div>
+  </div>
+  <p class="bio-p">We design celebrations where architecture,<br> emotion and experience become one.</p>
+</aside>
+
+<p id="colophon">Luxury Events &amp; Weddings</p>
+
+<div id="cue" aria-hidden="true"><span>Drag to explore</span><i></i></div>
+
+<button type="button" id="gridbtn" aria-label="Toggle project grid" aria-pressed="false"><i></i><i></i><i></i><i></i></button>
+
+<section id="panel" aria-hidden="true" inert>
+  <div class="p-in" id="panelBody"></div>
+</section>
+
+<nav id="menu" aria-label="Main navigation" aria-hidden="true" inert>
+  <p class="kick m-kick" data-site="brand">K Eventique</p>
+  <ul class="m-list">
+    <li><button type="button" data-go="experience" style="--k:0">The Experience</button></li>
+    <li><button type="button" data-go="weddings" style="--k:1">Weddings</button></li>
+    <li><button type="button" data-go="events" style="--k:2">Events</button></li>
+    <li><button type="button" data-go="journal" style="--k:3">Journal</button></li>
+    <li><button type="button" data-go="studio" style="--k:4">Studio</button></li>
+    <li><button type="button" data-go="contact" style="--k:5">Contact</button></li>
+  </ul>
+  <div class="m-foot">
+    <p data-site="locations">Cairo · Dubai · Riyadh</p>
+    <p class="m-contact" id="mContact"></p>
+    <p>Luxury Events &amp; Weddings</p>
+  </div>
+</nav>
+
+<div id="lit" role="dialog" aria-modal="true" aria-labelledby="litTitle" aria-hidden="true" inert>
+  <button type="button" class="scrim" tabindex="-1" aria-label="Close project"></button>
+  <div class="spread">
+    <figure class="plate" id="plate">
+      <img id="plateImg" alt="">
+      <button type="button" class="close" id="litClose" aria-label="Close project">Close</button>
+    </figure>
+    <div class="meta">
+      <div>
+        <p class="kick" id="litKick"></p>
+        <h2 id="litTitle"></h2>
+        <p class="where" id="litWhere"></p>
+      </div>
+      <div>
+        <p class="note" id="litNote"></p>
+        <div class="nav">
+          <button type="button" id="litPrev" aria-label="Previous project">Previous</button>
+          <button type="button" id="litNext" aria-label="Next project">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="intro" aria-hidden="true">
+  <div class="fallback"><p>We design the atmosphere before the guests arrive.</p></div>
+  <video
+    id="film"
+    muted
+    autoplay
+    playsinline
+    webkit-playsinline
+    preload="auto"
+    disablepictureinpicture>
+  </video>
+  <p class="film-mark"><span data-site="brand">K Eventique</span><span>A Film</span></p>
+  <div class="veil"></div>
+  <button type="button" id="skip" aria-label="Skip the introduction film">Skip</button>
+</div>
+
+<div id="splash" aria-hidden="true">
+  <div class="sp">
+    <p class="sp-mark" data-site="brand">K Eventique</p>
+    <p class="sp-sub">LUXURY EVENTS &amp; WEDDINGS</p>
+    <div class="sp-bar"><i id="bar"></i></div>
+  </div>
+</div>
+
+<div id="dot" aria-hidden="true"></div>
+
+<script>
+(() => {
+"use strict";
+
+/* ═════════ Central configuration — edit here ═════════ */
+const SITE = {
+  brand: "K Eventique",
+  email: "",
+  phone: "",
+  locations: ["Cairo", "Dubai", "Riyadh"],
+  instagram: "https://www.instagram.com/k_eventique/",
+  film: "https://assets.mixkit.co/videos/5213/5213-720.mp4",
+  images: [
+    { id: "arrival", title: "The Arrival", category: "WEDDING", place: "Dubai · UAE",
+      src: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa",
+      alt: "White villa venue with palm trees and a reflecting pool at dusk",
+      note: "The first impression begins before the guests enter. Water, stone and the last of the evening light form the threshold." },
+    { id: "first-look", title: "The First Look", category: "WEDDING", place: "Cairo · Egypt",
+      src: "https://images.unsplash.com/photo-1519741497674-611481863552",
+      alt: "Bride and groom backlit by low sun, holding a bouquet",
+      note: "A quiet moment before the room fills, when the entire evening still belongs to two people." },
+    { id: "architecture", title: "The Architecture", category: "PRIVATE", place: "Riyadh · Saudi Arabia",
+      src: "https://images.unsplash.com/photo-1571896349842-33c89424de2d",
+      alt: "Modern pavilion and pool lit at blue hour",
+      note: "We read a venue the way an architect reads a site — for its lines, its shadows and the way people will move through it." },
+    { id: "table", title: "The Table", category: "WEDDING", place: "Cairo · Egypt",
+      src: "https://images.unsplash.com/photo-1561912774-79769a0a0a7a",
+      alt: "Reception table set with white linen, crystal glasses and soft roses",
+      note: "Linen, glass and low florals, composed so that every guest can see every face." },
+    { id: "ceremony", title: "The Ceremony", category: "WEDDING", place: "North Coast · Egypt",
+      src: "https://images.unsplash.com/photo-1469371670807-013ccf25f16a",
+      alt: "Ceremony aisle lined with tall floral arrangements leading to a draped arch",
+      note: "An aisle measured in steps and silence. The ceremony is designed around the pause before the vows." },
+    { id: "details", title: "The Details", category: "WEDDING", place: "Dubai · UAE",
+      src: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8",
+      alt: "Two wedding bands resting on pale peonies",
+      note: "Paper weight, ink colour, the fold of a napkin. Every detail has a purpose." },
+    { id: "flowers", title: "The Flowers", category: "DESTINATION", place: "Mykonos · Greece",
+      src: "https://images.unsplash.com/photo-1529636798458-92182e662485",
+      alt: "Floral installation of garden roses on a timber arch draped in linen",
+      note: "Florals treated as architecture — grown into the structure, never simply placed upon it." },
+    { id: "entrance", title: "The Entrance", category: "BRAND", place: "Dubai · UAE",
+      src: "https://images.unsplash.com/photo-1566737236500-c8ac43014a67",
+      alt: "Guests walking through a corridor of linear light",
+      note: "A corridor of light that edits the outside world away before the evening begins." },
+    { id: "dance", title: "The Dance", category: "WEDDING", place: "Alexandria · Egypt",
+      src: "https://images.unsplash.com/photo-1460978812857-470ed1c77af0",
+      alt: "Black and white portrait of a couple embracing as the veil lifts in the wind",
+      note: "The room steps back and the light narrows. For three minutes, nothing else is designed to matter." },
+    { id: "light", title: "The Light", category: "CORPORATE", place: "Riyadh · Saudi Arabia",
+      src: "https://images.unsplash.com/photo-1478147427282-58a87a120781",
+      alt: "Raised hands silhouetted in a single beam of stage light",
+      note: "Light is the first material we design with, and the last thing guests remember." },
+    { id: "celebration", title: "The Celebration", category: "PRIVATE", place: "Cairo · Egypt",
+      src: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce",
+      alt: "Guests raising champagne glasses beneath strings of warm light",
+      note: "A toast nobody rehearsed. We build the room so that moments like this can happen on their own." },
+    { id: "bridal-room", title: "The Bridal Room", category: "WEDDING", place: "Cairo · Egypt",
+      src: "https://images.unsplash.com/photo-1550005809-91ad75fb315f",
+      alt: "Bride holding a bouquet of soft roses and eucalyptus beside the groom",
+      note: "The hours before are part of the evening — calm, unhurried, quietly prepared." },
+    { id: "setting", title: "The Setting", category: "DESTINATION", place: "Vík · Iceland",
+      src: "https://images.unsplash.com/photo-1544078751-58fee2d8a03b",
+      alt: "Couple on a black sand beach with sea stacks behind them",
+      note: "Some places need no decoration — only the discipline to leave them as they are." },
+    { id: "dinner", title: "The Dinner", category: "DESTINATION", place: "Mykonos · Greece",
+      src: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622",
+      alt: "Long dinner table with glassware, candles and seasonal flowers",
+      note: "An evening designed around conversation, movement and the view beyond the table." },
+    { id: "stage", title: "The Stage", category: "PRODUCTION", place: "Riyadh · Saudi Arabia",
+      src: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea",
+      alt: "Stage lit by golden beams above a large audience",
+      note: "Rigging, sound and light engineered to disappear, so that only the performance remains." },
+    { id: "gala", title: "The Gala", category: "GALA", place: "Dubai · UAE",
+      src: "https://images.unsplash.com/photo-1516997121675-4c2d1684aa3e",
+      alt: "Crystal glasses on a dinner table glowing under low coloured light",
+      note: "Black tie, low light and a room tuned to the rhythm of the evening." },
+    { id: "texture", title: "The Texture", category: "PRIVATE", place: "Cairo · Egypt",
+      src: "https://images.unsplash.com/photo-1487530811176-3780de880c2d",
+      alt: "Close view of a bouquet of garden roses, ranunculus and berries",
+      note: "Petal, velvet, aged brass. The close-up is where a room proves it was considered." },
+    { id: "after-dark", title: "After Dark", category: "PRIVATE", place: "Dubai · UAE",
+      src: "https://images.unsplash.com/photo-1574391884720-bbc3740c59d1",
+      alt: "Silhouettes on a dance floor in violet haze",
+      note: "Light, music and architecture transform the room long after sunset." },
+    { id: "destination", title: "The Destination", category: "DESTINATION", place: "Santorini · Greece",
+      src: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff",
+      alt: "White terraces of a Cycladic village above the sea at sunset",
+      note: "A celebration composed for the horizon. The island becomes the venue." },
+    { id: "grand-room", title: "The Grand Room", category: "WEDDING", place: "Cairo · Egypt", tall: true,
+      src: "https://images.unsplash.com/photo-1523438885200-e635ba2c371e",
+      alt: "Domed pavilion at the end of a long aisle of white chairs",
+      note: "Height, symmetry and a single line of sight. The room is built to be walked through slowly." },
+    { id: "last-frame", title: "The Last Frame", category: "WEDDING", place: "Sinai · Egypt",
+      src: "https://images.unsplash.com/photo-1532712938310-34cb3982ef74",
+      alt: "Couple walking hand in hand across an open landscape under a pale sky",
+      note: "When the guests have gone and the light is almost spent — the frame we design everything towards." }
+  ]
+};
+
+const CATS = {
+  WEDDING:     { label: "Wedding",             group: "weddings" },
+  DESTINATION: { label: "Destination Wedding", group: "weddings" },
+  PRIVATE:     { label: "Private Celebration", group: "events" },
+  CORPORATE:   { label: "Corporate Event",     group: "events" },
+  GALA:        { label: "Gala Dinner",         group: "events" },
+  BRAND:       { label: "Brand Event",         group: "events" },
+  PRODUCTION:  { label: "Event Production",    group: "events" }
+};
+
+const SERVICES = {
+  Weddings:   ["Full Wedding Planning", "Destination Weddings", "Ceremony Design", "Reception Design", "Floral & Styling", "Guest Experience"],
+  Events:     ["Corporate Events", "Brand Launches", "Gala Dinners", "Private Celebrations", "Fashion Events", "VIP Experiences"],
+  Production: ["Stage Design", "Lighting", "Sound", "AV Production", "Entertainment", "On-site Management"]
+};
+
+/* ═════════ Helpers ═════════ */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const pad2 = n => String(n).padStart(2, "0");
+const D2R = Math.PI / 180, R2D = 180 / Math.PI;
+const mq = q => window.matchMedia(q);
+const reduced = mq("(prefers-reduced-motion: reduce)");
+const fine = mq("(hover: hover) and (pointer: fine)");
+const coarse = mq("(pointer: coarse)");
+const body = document.body;
+const IMGS = SITE.images;
+const N = IMGS.length;
+
+function sized(src, w, h, q) {
+  try {
+    const u = new URL(src);
+    if (u.hostname === "images.unsplash.com") {
+      u.search = "";
+      u.searchParams.set("auto", "format");
+      u.searchParams.set("fit", "crop");
+      u.searchParams.set("w", Math.round(w));
+      if (h) u.searchParams.set("h", Math.round(h));
+      u.searchParams.set("q", q);
+      return u.href;
+    }
+  } catch (e) { /* relative or invalid URL — use as is */ }
+  return src;
+}
+const fullSrc = it => it.tall ? sized(it.src, 1600, 2000, 82) : sized(it.src, 2400, 1600, 82);
+const city = it => String(it.place || "").split("·")[0].trim();
+const igHandle = () => { try { return "@" + new URL(SITE.instagram).pathname.replace(/\//g, ""); } catch (e) { return "Instagram"; } };
+
+/* Category numbering, e.g. WEDDING 01, DESTINATION 03 */
+const counters = {};
+const numbering = IMGS.map(it => { counters[it.category] = (counters[it.category] || 0) + 1; return it.category + " " + pad2(counters[it.category]); });
+
+/* Brand data into the DOM */
+$$('[data-site="brand"]').forEach(n => { n.textContent = SITE.brand; });
+$$('[data-site="locations"]').forEach(n => { n.textContent = SITE.locations.join(" · "); });
+
+function contactLinks() {
+  const out = [];
+  if (SITE.email) out.push(`<a href="mailto:${esc(SITE.email)}">${esc(SITE.email)}</a>`);
+  if (SITE.phone) out.push(`<a href="tel:${esc(SITE.phone.replace(/[^\d+]/g, ""))}">${esc(SITE.phone)}</a>`);
+  if (SITE.instagram) out.push(`<a href="${esc(SITE.instagram)}" target="_blank" rel="noopener">Instagram</a>`);
+  return out.join("");
+}
+$("#mContact").innerHTML = contactLinks();
+
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+window.scrollTo(0, 0);
+
+/* ═════════ Elements ═════════ */
+const stage = $("#stage"), world = $("#world"), orb = $("#orb"), headline = $("#headline");
+const grid = $("#grid"), gList = $("#gList"), gridBtn = $("#gridbtn");
+const menu = $("#menu"), menuBtn = $("#menuBtn");
+const panel = $("#panel"), panelBody = $("#panelBody");
+const lit = $("#lit"), plate = $("#plate"), plateImg = $("#plateImg");
+const intro = $("#intro"), film = $("#film"), splash = $("#splash"), bar = $("#bar"), skipBtn = $("#skip");
+const dot = $("#dot");
+
+/* ═════════ Build sphere cards (Fibonacci distribution) ═════════ */
+const GA = Math.PI * (3 - Math.sqrt(5));
+const cards = [];
+const thumbs = new Array(N);
+const frag = document.createDocumentFragment();
+for (let i = 0; i < N; i++) {
+  const it = IMGS[i];
+  const y = 1 - (i / (N - 1)) * 2;
+  const rad = Math.sqrt(Math.max(0, 1 - y * y));
+  const theta = i * GA;
+  const x = Math.cos(theta) * rad;
+  const z = Math.sin(theta) * rad;
+  const lat = Math.asin(y) * R2D;
+  const lon = Math.atan2(x, z) * R2D;
+  const el = document.createElement("div");
+  el.className = "card" + (it.tall ? " tall" : "");
+  el.tabIndex = 0;
+  el.dataset.i = i;
+  el.setAttribute("role", "button");
+  el.setAttribute("aria-label", `${it.title} — ${CATS[it.category].label}, ${it.place}. Open project`);
+  const fig = document.createElement("figure");
+  const img = document.createElement("img");
+  img.alt = it.alt;
+  img.draggable = false;
+  img.decoding = "async";
+  fig.appendChild(img);
+  el.appendChild(fig);
+  frag.appendChild(el);
+  cards.push({ el, img, v: [x, -y, z], lon, lat, d: -1, o: -1 });
+}
+orb.appendChild(frag);
+
+/* ═════════ Build flat grid ═════════ */
+const gItems = [];
+(() => {
+  const f = document.createDocumentFragment();
+  IMGS.forEach((it, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "g-item";
+    b.dataset.i = i;
+    b.style.setProperty("--k", i);
+    b.setAttribute("aria-label", `${it.title} — ${CATS[it.category].label}, ${it.place}. Open project`);
+    b.innerHTML = `<span class="g-img"><img alt="${esc(it.alt)}" loading="lazy" decoding="async" draggable="false"></span>` +
+      `<span class="g-cap"><span class="g-cat">${esc(numbering[i])}</span><span class="g-t">${esc(it.title)}</span><span class="g-place">${esc(it.place)}</span></span>`;
+    f.appendChild(b);
+    gItems.push(b);
+  });
+  gList.appendChild(f);
+})();
+
+/* ═════════ Layout: radius, card size, perspective ═════════ */
+let R = 300, cw = 140, persp = 1150;
+function layout() {
+  const w = window.innerWidth, h = window.innerHeight;
+  const tier = w <= 640 ? 2 : w <= 900 ? 1 : 0;
+  const cfg = [[.46, .58, 155, .47], [.42, .52, 120, .46], [.38, .48, 108, .44]][tier];
+  R = Math.max(cfg[2], Math.min(480, h * cfg[0], w * cfg[1]));
+  cw = Math.round(Math.max(72, R * cfg[3]));
+  persp = parseFloat(getComputedStyle(stage).perspective) || (w <= 380 ? 620 : w <= 640 ? 760 : w <= 900 ? 920 : 1150);
+  stage.style.setProperty("--cw", cw + "px");
+  for (const c of cards) {
+    c.el.style.transform =
+      `translate3d(${(c.v[0] * R).toFixed(2)}px,${(c.v[1] * R).toFixed(2)}px,${(c.v[2] * R).toFixed(2)}px) rotateY(${c.lon.toFixed(3)}deg) rotateX(${c.lat.toFixed(3)}deg)`;
+  }
+}
+layout();
+
+/* ═════════ Thumbnail decode (once) ═════════ */
+const decodeW = (() => { const w = window.innerWidth; return w <= 380 ? 420 : w <= 640 ? 520 : w <= 900 ? 640 : 760; })();
+function loadImage(url, cors) {
+  return new Promise((res, rej) => {
+    const im = new Image();
+    if (cors) im.crossOrigin = "anonymous";
+    im.decoding = "async";
+    im.onload = () => res(im);
+    im.onerror = () => rej(new Error("load"));
+    im.src = url;
+  });
+}
+async function makeThumb(it) {
+  const W = decodeW, H = Math.round(it.tall ? W * 1.25 : W / 1.5);
+  const src = sized(it.src, W * 1.25, H * 1.25, 72);
+  try {
+    const im = await loadImage(src, true);
+    const c = document.createElement("canvas");
+    c.width = W; c.height = H;
+    const ctx = c.getContext("2d");
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    const s = Math.max(W / im.naturalWidth, H / im.naturalHeight);
+    const dw = im.naturalWidth * s, dh = im.naturalHeight * s;
+    ctx.drawImage(im, (W - dw) / 2, (H - dh) / 2, dw, dh);
+    const blob = await new Promise((res, rej) => c.toBlob(b => b ? res(b) : rej(new Error("blob")), "image/webp", .88));
+    return URL.createObjectURL(blob);
+  } catch (e) {
+    return src; /* canvas or CORS failed — use the original URL */
+  }
+}
+function applyThumb(i, url) {
+  thumbs[i] = url;
+  const c = cards[i];
+  c.img.onload = () => c.el.classList.add("ready");
+  c.img.src = url;
+  if (c.img.complete && c.img.naturalWidth) c.el.classList.add("ready");
+  gItems[i].querySelector("img").src = url;
+}
+
+/* ═════════ Camera state ═════════ */
+const spin = 0, tilt = -4, pitchLimit = 32;
+let camZ = 0, dragX = 0, dragY = 0, velX = 0, velY = 0, focusedIndex = -1;
+let dragging = false, ptr = null, explored = false, dragTravel = 0;
+let focusTarget = null, litMix = 0, isDeep = false, revealed = false;
+let lastWorld = "", lastHead = "", lastHeadOp = -1;
+let mouseX = -100, mouseY = -100, dotX = -100, dotY = -100;
+
+function clampPitch() {
+  const lo = -pitchLimit - tilt, hi = pitchLimit - tilt;
+  if (dragY < lo) { dragY = lo; velY = 0; }
+  if (dragY > hi) { dragY = hi; velY = 0; }
+}
+
+function frame() {
+  if (!dragging) {
+    if (focusTarget) {
+      dragX += (focusTarget.x - dragX) * .12;
+      dragY += (focusTarget.y - dragY) * .12;
+      if (Math.abs(focusTarget.x - dragX) < .05 && Math.abs(focusTarget.y - dragY) < .05) focusTarget = null;
+    } else {
+      dragX += velX; dragY += velY;
+      velX *= .94; velY *= .94;
+      if (Math.abs(velX) < .002) velX = 0;
+      if (Math.abs(velY) < .002) velY = 0;
+    }
+  }
+  clampPitch();
+
+  const vh = window.innerHeight;
+  const p = clamp(window.scrollY / (vh * .16), 0, 1);
+  const camZTarget = p * Math.min(64, R * .12);
+  camZ += (camZTarget - camZ) * .075;
+  if (Math.abs(camZTarget - camZ) < .01) camZ = camZTarget;
+
+  const sy = spin + dragX, sx = tilt + dragY;
+
+  const wt = `translateZ(${camZ.toFixed(2)}px) rotateY(${sy.toFixed(3)}deg) rotateX(${sx.toFixed(3)}deg)`;
+  if (wt !== lastWorld) { world.style.transform = wt; lastWorld = wt; }
+  const ht = `rotateX(${(-sx).toFixed(3)}deg) rotateY(${(-sy).toFixed(3)}deg) translateZ(${(R * .62).toFixed(2)}px)`;
+  if (ht !== lastHead) { headline.style.transform = ht; lastHead = ht; }
+  const litTarget = body.classList.contains("lit") ? 1 : 0;
+  litMix += (litTarget - litMix) * .12;
+  if (Math.abs(litTarget - litMix) < .005) litMix = litTarget;
+
+  const hop = Math.round(Math.max(0, 1 - p * .55) * (1 - .88 * litMix) * 1000) / 1000;
+  if (hop !== lastHeadOp) { headline.style.opacity = hop; lastHeadOp = hop; }
+
+  const cy = Math.cos(sy * D2R), syn = Math.sin(sy * D2R);
+  const cx = Math.cos(sx * D2R), sxn = Math.sin(sx * D2R);
+  const shade = 1 - Math.min(1, p * 1.6);
+  const near = persp * .66;
+  for (let i = 0; i < N; i++) {
+    const c = cards[i], v = c.v;
+    const z1 = v[1] * sxn + v[2] * cx;
+    const zf = -v[0] * syn + z1 * cy;
+    const base = 0.14 + 0.86 * Math.pow((zf + 1) / 2, .85);
+    let dim = shade * (1 - base) + .78 * litMix;
+    const zw = zf * R + camZ;
+    let op = zw > near * .8 ? clamp((near - zw) / (near * .2), 0, 1) : 1;
+    if (i === focusedIndex) op = 0;
+    dim = Math.round(Math.min(1, dim) * 100) / 100;
+    op = Math.round(op * 100) / 100;
+    if (dim !== c.d) { c.el.style.setProperty("--d", dim); c.d = dim; }
+    if (op !== c.o) { c.el.style.opacity = op; c.o = op; }
+  }
+
+  const deep = revealed && (p > .55 || explored);
+  if (deep !== isDeep) { isDeep = deep; body.classList.toggle("deep", deep); }
+
+  if (fine.matches) {
+    dotX += (mouseX - dotX) * .28; dotY += (mouseY - dotY) * .28;
+    dot.style.transform = `translate3d(${dotX.toFixed(1)}px,${dotY.toFixed(1)}px,0)`;
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ═════════ Scroll: dolly only, clamped ═════════ */
+function clampScroll() {
+  const max = window.innerHeight * .16;
+  if (window.scrollY > max + 1) window.scrollTo(0, max);
+}
+window.addEventListener("scroll", clampScroll, { passive: true });
+let resizeRaf = 0;
+window.addEventListener("resize", () => {
+  cancelAnimationFrame(resizeRaf);
+  resizeRaf = requestAnimationFrame(() => { layout(); clampScroll(); });
+});
+
+/* ═════════ Drag interaction ═════════ */
+const K = .13;
+const overlayOpen = () => body.classList.contains("lit") || body.classList.contains("menuopen") || body.classList.contains("gridview") || body.classList.contains("panelopen");
+
+stage.addEventListener("pointerdown", e => {
+  if (!revealed || overlayOpen() || (e.pointerType === "mouse" && e.button !== 0)) return;
+  focusTarget = null;
+  velX = velY = 0;
+  ptr = {
+    id: e.pointerId, type: e.pointerType,
+    x0: e.clientX, y0: e.clientY, lx: e.clientX, ly: e.clientY, lt: performance.now(),
+    card: e.target.closest(".card"), moved: 0,
+    active: e.pointerType !== "touch", cancelled: false
+  };
+  if (ptr.active) {
+    try { stage.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+    dragging = true;
+  }
+});
+stage.addEventListener("pointermove", e => {
+  if (!ptr || e.pointerId !== ptr.id || ptr.cancelled) return;
+  const tx = e.clientX - ptr.x0, ty = e.clientY - ptr.y0;
+  ptr.moved = Math.max(ptr.moved, Math.hypot(tx, ty));
+  if (!ptr.active) {
+    if (Math.hypot(tx, ty) < 10) return;
+    if (Math.abs(ty) > Math.abs(tx) * 1.15) { ptr.cancelled = true; return; } /* let the page scroll */
+    ptr.active = true;
+    dragging = true;
+    try { stage.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+    ptr.lx = e.clientX; ptr.ly = e.clientY; ptr.lt = performance.now();
+    return;
+  }
+  const dx = e.clientX - ptr.lx, dy = e.clientY - ptr.ly;
+  dragX += dx * K;
+  dragY -= dy * K;
+  clampPitch();
+  velX = velX * .4 + dx * K * .6;
+  velY = velY * .4 - dy * K * .6;
+  dragTravel += Math.abs(dx * K) + Math.abs(dy * K);
+  if (dragTravel > 170) explored = true;
+  ptr.lx = e.clientX; ptr.ly = e.clientY; ptr.lt = performance.now();
+});
+function endPointer(e, cancelled) {
+  if (!ptr || e.pointerId !== ptr.id) return;
+  const slop = (ptr.type === "touch" || coarse.matches) ? 14 : 6;
+  if (!cancelled && !ptr.cancelled && ptr.moved <= slop && ptr.card) {
+    velX = velY = 0;
+    openLit(+ptr.card.dataset.i, ptr.card);
+  } else if (performance.now() - ptr.lt > 90) {
+    velX = velY = 0;
+  }
+  if (reduced.matches) { velX *= .3; velY *= .3; }
+  try { if (stage.hasPointerCapture(e.pointerId)) stage.releasePointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+  dragging = false;
+  ptr = null;
+}
+stage.addEventListener("pointerup", e => endPointer(e, false));
+stage.addEventListener("pointercancel", e => endPointer(e, true));
+stage.addEventListener("dragstart", e => e.preventDefault());
+
+/* keyboard on cards */
+function faceCard(i) {
+  const [vx, vy, vz] = cards[i].v;
+  const a = Math.asin(clamp(-vx, -1, 1)) * R2D;
+  const b1 = { sy: a, sx: Math.atan2(vy, vz) * R2D };
+  const b2 = { sy: 180 - a, sx: Math.atan2(-vy, -vz) * R2D };
+  const b = Math.abs(b1.sx) <= Math.abs(b2.sx) ? b1 : b2;
+  const sxT = clamp(b.sx, -pitchLimit, pitchLimit);
+  let tx = b.sy - spin;
+  tx += 360 * Math.round((dragX - tx) / 360);
+  velX = velY = 0;
+  focusTarget = { x: tx, y: sxT - tilt };
+}
+orb.addEventListener("focusin", e => {
+  const c = e.target.closest(".card");
+  if (c && c.matches(":focus-visible")) faceCard(+c.dataset.i);
+});
+orb.addEventListener("keydown", e => {
+  const c = e.target.closest(".card");
+  if (c && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openLit(+c.dataset.i, c); }
+});
+
+/* ═════════ Lightbox (FLIP) ═════════ */
+let litToken = 0, litIndex = -1, litSource = null, litTimer = 0, litReturn = null;
+const flipDur = () => reduced.matches ? 160 : 640;
+function flipTransform(from, to) {
+  return `translate(${(from.left - to.left).toFixed(2)}px,${(from.top - to.top).toFixed(2)}px) scale(${(from.width / to.width).toFixed(4)},${(from.height / to.height).toFixed(4)})`;
+}
+function fillLit(i) {
+  const it = IMGS[i];
+  $("#litKick").textContent = `${numbering[i]} — ${pad2(i + 1)} / ${N}`;
+  $("#litTitle").textContent = it.title;
+  $("#litWhere").textContent = `${CATS[it.category].label} · ${city(it)}`;
+  $("#litNote").textContent = it.note;
+  plateImg.alt = it.alt;
+  plate.classList.toggle("tall", !!it.tall);
+  plateImg.src = thumbs[i] || sized(it.src, 900, it.tall ? 1125 : 600, 70);
+}
+function loadFull(i, tok) {
+  const url = fullSrc(IMGS[i]);
+  const im = new Image();
+  im.decoding = "async";
+  im.src = url;
+  const ready = im.decode ? im.decode() : new Promise((res, rej) => { im.onload = res; im.onerror = rej; });
+  ready.then(() => {
+    if (tok !== litToken || litIndex !== i || !lit.classList.contains("open") || lit.classList.contains("closing")) return;
+    plateImg.src = url;
+  }).catch(() => { /* keep the thumbnail */ });
+}
+function sourceFor(i) {
+  if (body.classList.contains("gridview")) return gItems[i].querySelector(".g-img");
+  if (body.classList.contains("panelopen")) return null;
+  return cards[i].el;
+}
+function openLit(i, sourceEl) {
+  if (i < 0 || i >= N) return;
+  clearTimeout(litTimer);
+  const tok = ++litToken;
+  litIndex = i;
+  litSource = sourceEl || null;
+  litReturn = document.activeElement;
+  focusedIndex = (sourceEl && sourceEl.classList.contains("card")) ? i : -1;
+  velX = velY = 0; focusTarget = null;
+  fillLit(i);
+  lit.classList.remove("closing");
+  lit.classList.add("open");
+  lit.inert = false;
+  lit.setAttribute("aria-hidden", "false");
+  body.classList.add("lit");
+  lit.scrollTop = 0;
+
+  plate.style.transition = "none";
+  plate.style.transform = "none";
+  plate.style.opacity = "1";
+  const to = plate.getBoundingClientRect();
+  if (sourceEl) {
+    const from = sourceEl.getBoundingClientRect();
+    plate.style.transformOrigin = "0 0";
+    plate.style.transform = flipTransform(from, to);
+    void plate.offsetWidth; /* force layout before animating */
+    plate.style.transition = `transform ${flipDur()}ms cubic-bezier(.22,.61,.36,1)`;
+    plate.style.transform = "none";
+  } else {
+    plate.style.opacity = "0";
+    void plate.offsetWidth;
+    plate.style.transition = `opacity ${flipDur()}ms ease`;
+    plate.style.opacity = "1";
+  }
+  loadFull(i, tok);
+  setTimeout(() => { if (tok === litToken) $("#litClose").focus({ preventScroll: true }); }, 60);
+}
+function stepLit(dir) {
+  if (!lit.classList.contains("open") || lit.classList.contains("closing")) return;
+  const i = (litIndex + dir + N) % N;
+  const tok = ++litToken;
+  litIndex = i;
+  const src = sourceFor(i);
+  litSource = src;
+  focusedIndex = (src && src.classList.contains("card")) ? i : -1;
+  fillLit(i);
+  loadFull(i, tok);
+}
+function closeLit() {
+  if (!lit.classList.contains("open") || lit.classList.contains("closing")) return;
+  ++litToken; /* stale full-res requests can no longer write */
+  focusedIndex = -1;
+  body.classList.remove("lit");
+  lit.classList.add("closing");
+  const dur = flipDur();
+  const to = plate.getBoundingClientRect();
+  const src = litSource && document.contains(litSource) ? litSource : null;
+  const from = src ? src.getBoundingClientRect() : null;
+  if (from && from.width > 0) {
+    plate.style.transformOrigin = "0 0";
+    plate.style.transition = `transform ${dur}ms cubic-bezier(.22,.61,.36,1), opacity ${Math.round(dur * .35)}ms ease ${Math.round(dur * .7)}ms`;
+    plate.style.transform = flipTransform(from, to);
+    plate.style.opacity = "0";
+  } else {
+    plate.style.transition = `opacity ${Math.round(dur * .6)}ms ease`;
+    plate.style.opacity = "0";
+  }
+  clearTimeout(litTimer);
+  litTimer = setTimeout(() => {
+    lit.classList.remove("open", "closing");
+    lit.inert = true;
+    lit.setAttribute("aria-hidden", "true");
+    plate.style.transition = "";
+    plate.style.transform = "";
+    plate.style.transformOrigin = "";
+    plate.style.opacity = "";
+    litIndex = -1;
+    if (litReturn && document.contains(litReturn) && litReturn !== document.body) {
+      try { litReturn.focus({ preventScroll: true }); } catch (e) { /* ignore */ }
+    }
+  }, dur);
+}
+$("#litClose").addEventListener("click", closeLit);
+$("#lit .scrim").addEventListener("click", closeLit);
+$("#litPrev").addEventListener("click", () => stepLit(-1));
+$("#litNext").addEventListener("click", () => stepLit(1));
+
+/* ═════════ Grid ═════════ */
+let gridFilter = "all";
+const GRID_COPY = {
+  all:      { kick: "Selected Work", title: "The Archive", sub: "Twenty-one frames from weddings, celebrations and productions — one complete evening, from the arrival to the last frame.", svc: [] },
+  weddings: { kick: "Wedding — Selected Work", title: "Weddings", sub: "From the first look to the last frame. Weddings designed as a single, continuous story, at home or across the world.", svc: ["Weddings"] },
+  events:   { kick: "Events & Production — Selected Work", title: "Events", sub: "Corporate evenings, brand moments, galas and private celebrations — designed, produced and directed end to end.", svc: ["Events", "Production"] }
+};
+function setFilter(f) {
+  gridFilter = GRID_COPY[f] ? f : "all";
+  const copy = GRID_COPY[gridFilter];
+  $("#gKick").textContent = copy.kick;
+  $("#gTitle").textContent = copy.title;
+  $("#gSub").textContent = copy.sub;
+  $("#gServices").innerHTML = copy.svc.map(k =>
+    `<div class="svc"><h3>${esc(k)}</h3><ul>${SERVICES[k].map(s => `<li>${esc(s)}</li>`).join("")}</ul></div>`).join("");
+  $$(".g-filters button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.f === gridFilter)));
+  let k = 0;
+  gItems.forEach((b, i) => {
+    const show = gridFilter === "all" || CATS[IMGS[i].category].group === gridFilter;
+    b.hidden = !show;
+    if (show) b.style.setProperty("--k", k++);
+  });
+}
+function openGrid(f) {
+  closePanel();
+  setFilter(f || gridFilter);
+  body.classList.add("gridview");
+  grid.inert = false;
+  grid.setAttribute("aria-hidden", "false");
+  grid.scrollTop = 0;
+  gridBtn.setAttribute("aria-pressed", "true");
+  setCurrent(gridFilter === "weddings" ? "weddings" : gridFilter === "events" ? "events" : "");
+}
+function closeGrid() {
+  if (!body.classList.contains("gridview")) return;
+  body.classList.remove("gridview");
+  grid.inert = true;
+  grid.setAttribute("aria-hidden", "true");
+  gridBtn.setAttribute("aria-pressed", "false");
+  setCurrent("experience");
+}
+gridBtn.addEventListener("click", () => body.classList.contains("gridview") ? closeGrid() : openGrid("all"));
+$$(".g-filters button").forEach(b => b.addEventListener("click", () => { setFilter(b.dataset.f); setCurrent(b.dataset.f === "all" ? "" : b.dataset.f); }));
+gList.addEventListener("click", e => {
+  const b = e.target.closest(".g-item");
+  if (b) openLit(+b.dataset.i, b.querySelector(".g-img"));
+});
+setFilter("all");
+
+/* ═════════ Panels: Studio, Journal, Contact ═════════ */
+const JOURNAL = [
+  { img: 0, title: "On Arrival", text: "The evening does not begin at the door. It begins at the kerb, in the scent of the garden, in the first view of the room through an open archway. We design that approach as carefully as the table." },
+  { img: 9, title: "Notes on Light", text: "We plan light hour by hour — the colour of the sky at the ceremony, the moment candles take over, the point where the dance floor deserves its own weather. Light decides what guests remember." },
+  { img: 13, title: "The Long Table", text: "A long table changes how people speak to one another. It asks for fewer centrepieces, lower florals, longer evenings. An evening designed around conversation, movement and the view beyond the table." },
+  { img: 14, title: "Production, Unseen", text: "The finest production goes unnoticed: cables that vanish, cues that land on the breath of a speech, a change of scene that feels like the room simply decided to transform." }
+];
+const PANELS = {
+  studio: () => `
+    <p class="kick">${esc(SITE.brand)} — Studio</p>
+    <h2 class="p-h" tabindex="-1">Nothing is accidental. <em>Nothing is ordinary.</em></h2>
+    <div class="p-lede">
+      <p>${esc(SITE.brand)} is a creative house for weddings, private celebrations and events. We design the atmosphere before the guests arrive — from the architecture of the room to the rhythm of the evening.</p>
+      <p>Each project is led by a small studio team that stays with it from the first conversation to the final frame: concept, design, production and direction on the day. Intimate dinners and evenings for a thousand guests receive the same attention.</p>
+    </div>
+    <div class="p-rule"></div>
+    <p class="kick" style="margin-bottom:28px">Disciplines</p>
+    <div class="p-cols">${Object.keys(SERVICES).map(k => `<div class="svc"><h3>${esc(k)}</h3><ul>${SERVICES[k].map(s => `<li>${esc(s)}</li>`).join("")}</ul></div>`).join("")}</div>
+    <div class="p-rule"></div>
+    <p class="kick" style="margin-bottom:28px">Method</p>
+    <ol class="p-steps">
+      <li><span>01</span><b>Conversation</b><p>We listen for the feeling of the day before we talk about objects.</p></li>
+      <li><span>02</span><b>Concept</b><p>A single idea that every decision can be measured against.</p></li>
+      <li><span>03</span><b>Design</b><p>Space, light, florals, paper and sound drawn as one composition.</p></li>
+      <li><span>04</span><b>Production</b><p>Suppliers, structures and schedules engineered to the minute.</p></li>
+      <li><span>05</span><b>Direction</b><p>On the day, we run the evening so that you can live it.</p></li>
+    </ol>
+    <div class="p-rule"></div>
+    <p class="p-quote">Every detail has a purpose. From the architecture of the room to the rhythm of the evening.</p>
+    <p class="kick" style="margin-top:28px">${esc(SITE.locations.join(" · "))}</p>
+    <div class="p-actions">
+      <button type="button" class="tlink" data-act="grid">View the archive</button>
+      <button type="button" class="tlink" data-act="contact">Begin a conversation</button>
+    </div>`,
+  journal: () => `
+    <p class="kick">${esc(SITE.brand)} — Journal</p>
+    <h2 class="p-h" tabindex="-1">Notes from the studio.</h2>
+    <div class="j-list">${JOURNAL.map((j, n) => `
+      <article class="j-item">
+        <button type="button" class="j-media" data-open="${j.img}" aria-label="Open ${esc(IMGS[j.img].title)}"><img src="${esc(thumbs[j.img] || sized(IMGS[j.img].src, 900, 600, 70))}" alt="${esc(IMGS[j.img].alt)}" loading="lazy" decoding="async"></button>
+        <div>
+          <p class="kick">Journal ${pad2(n + 1)}</p>
+          <h3>${esc(j.title)}</h3>
+          <p>${esc(j.text)}</p>
+        </div>
+      </article>`).join("")}
+    </div>
+    <div class="p-actions">
+      <button type="button" class="tlink" data-act="grid">View the archive</button>
+    </div>`,
+  contact: () => {
+    const rows = [`<div><dt>Studios</dt><dd>${esc(SITE.locations.join(" · "))}</dd></div>`];
+    if (SITE.email) rows.push(`<div><dt>Email</dt><dd><a href="mailto:${esc(SITE.email)}">${esc(SITE.email)}</a></dd></div>`);
+    if (SITE.phone) rows.push(`<div><dt>Telephone</dt><dd><a href="tel:${esc(SITE.phone.replace(/[^\d+]/g, ""))}">${esc(SITE.phone)}</a></dd></div>`);
+    if (SITE.instagram) rows.push(`<div><dt>Instagram</dt><dd><a href="${esc(SITE.instagram)}" target="_blank" rel="noopener">${esc(igHandle())}</a></dd></div>`);
+    const lead = (!SITE.email && !SITE.phone && SITE.instagram)
+      ? "Enquiries are currently received by direct message on Instagram. Share the date, the place and the feeling you have in mind."
+      : "Share the date, the place and the feeling you have in mind. Every enquiry is read by the studio.";
+    return `
+    <p class="kick">${esc(SITE.brand)} — Contact</p>
+    <h2 class="p-h" tabindex="-1">Begin a <em>conversation.</em></h2>
+    <div class="p-lede"><p>${esc(lead)}</p><p>We take on a limited number of weddings and events each season, so that every project receives the full attention of the studio.</p></div>
+    <div class="p-rule"></div>
+    <dl class="c-grid">${rows.join("")}</dl>
+    ${SITE.instagram ? `<div class="p-actions"><a class="tlink" href="${esc(SITE.instagram)}" target="_blank" rel="noopener">Write to us on Instagram</a></div>` : ""}`;
+  }
+};
+let panelReturn = null;
+function openPanel(type) {
+  if (!PANELS[type]) return;
+  closeGrid();
+  panelReturn = document.activeElement;
+  panelBody.innerHTML = PANELS[type]();
+  body.classList.add("panelopen");
+  panel.inert = false;
+  panel.setAttribute("aria-hidden", "false");
+  panel.setAttribute("aria-label", type.charAt(0).toUpperCase() + type.slice(1));
+  panel.scrollTop = 0;
+  setCurrent(type);
+  setTimeout(() => { const h = $(".p-h", panelBody); if (h && !body.classList.contains("menuopen")) h.focus({ preventScroll: true }); }, 450);
+}
+function closePanel() {
+  if (!body.classList.contains("panelopen")) return;
+  body.classList.remove("panelopen");
+  panel.inert = true;
+  panel.setAttribute("aria-hidden", "true");
+  setCurrent("experience");
+}
+panelBody.addEventListener("click", e => {
+  const a = e.target.closest("[data-act],[data-open]");
+  if (!a) return;
+  if (a.dataset.open != null) { openLit(+a.dataset.open, a); return; }
+  if (a.dataset.act === "grid") openGrid("all");
+  if (a.dataset.act === "contact") openPanel("contact");
+});
+
+/* ═════════ Menu ═════════ */
+let menuReturn = null;
+function setCurrent(key) {
+  $$(".m-list button").forEach(b => b.setAttribute("aria-current", String(b.dataset.go === key)));
+}
+function setMenu(open) {
+  if (open === body.classList.contains("menuopen")) return;
+  body.classList.toggle("menuopen", open);
+  menu.inert = !open;
+  menu.setAttribute("aria-hidden", String(!open));
+  menuBtn.setAttribute("aria-expanded", String(open));
+  $(".lbl", menuBtn).textContent = open ? "Close" : "Menu";
+  if (open) {
+    menuReturn = document.activeElement;
+    velX = velY = 0;
+    setTimeout(() => { const b = $(".m-list button", menu); if (b) b.focus({ preventScroll: true }); }, 120);
+  } else if (menuReturn && document.contains(menuReturn) && menuReturn !== document.body && !menu.contains(menuReturn)) {
+    try { menuReturn.focus({ preventScroll: true }); } catch (e) { /* ignore */ }
+  }
+}
+function toExperience() {
+  closeLit(); closeGrid(); closePanel();
+  explored = false; dragTravel = 0;
+  window.scrollTo(0, 0);
+  setCurrent("experience");
+}
+menuBtn.addEventListener("click", () => setMenu(!body.classList.contains("menuopen")));
+$("#logo").addEventListener("click", () => { setMenu(false); toExperience(); });
+menu.addEventListener("click", e => {
+  const b = e.target.closest("[data-go]");
+  if (!b) return;
+  const go = b.dataset.go;
+  menuReturn = null;
+  setMenu(false);
+  if (go === "experience") toExperience();
+  else if (go === "weddings") openGrid("weddings");
+  else if (go === "events") openGrid("events");
+  else openPanel(go);
+});
+setCurrent("experience");
+
+/* ═════════ Keyboard ═════════ */
+function trapFocus(e, root) {
+  const f = $$('button:not([disabled]):not([tabindex="-1"]),a[href],[tabindex="0"]', root).filter(n => n.offsetParent !== null || n === document.activeElement);
+  if (!f.length) return;
+  const first = f[0], last = f[f.length - 1];
+  if (e.shiftKey && (document.activeElement === first || !root.contains(document.activeElement))) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && (document.activeElement === last || !root.contains(document.activeElement))) { e.preventDefault(); first.focus(); }
+}
+document.addEventListener("keydown", e => {
+  if (!introDone) {
+    if (e.key === "Escape" && splashDone) finishIntro();
+    return;
+  }
+  if (e.key === "Escape") {
+    if (lit.classList.contains("open")) closeLit();
+    else if (body.classList.contains("menuopen")) setMenu(false);
+    else if (body.classList.contains("gridview")) closeGrid();
+    else toExperience();
+    return;
+  }
+  if (e.key === "Tab") {
+    if (lit.classList.contains("open")) trapFocus(e, lit);
+    else if (body.classList.contains("menuopen")) trapFocus(e, menu);
+    return;
+  }
+  if (lit.classList.contains("open")) {
+    if (e.key === "ArrowRight") { e.preventDefault(); stepLit(1); }
+    if (e.key === "ArrowLeft") { e.preventDefault(); stepLit(-1); }
+    return;
+  }
+  if (overlayOpen()) return;
+  const t = e.target;
+  if (t === document.body || stage.contains(t)) {
+    const s = reduced.matches ? .6 : 1.4;
+    if (e.key === "ArrowLeft") { e.preventDefault(); focusTarget = null; velX -= s; }
+    if (e.key === "ArrowRight") { e.preventDefault(); focusTarget = null; velX += s; }
+    if (e.key === "ArrowUp") { e.preventDefault(); focusTarget = null; velY += s; }
+    if (e.key === "ArrowDown") { e.preventDefault(); focusTarget = null; velY -= s; }
+  }
+});
+
+/* ═════════ Custom cursor (fine pointers only) ═════════ */
+function setupCursor() {
+  document.documentElement.classList.toggle("fine", fine.matches);
+}
+setupCursor();
+if (fine.addEventListener) fine.addEventListener("change", setupCursor);
+window.addEventListener("mousemove", e => {
+  if (!fine.matches) return;
+  mouseX = e.clientX; mouseY = e.clientY;
+  if (dotX < -50) { dotX = mouseX; dotY = mouseY; }
+  dot.classList.add("on");
+  const hit = e.target.closest && e.target.closest("a,button,img,.card,[role='button']");
+  dot.classList.toggle("big", !!hit && !dragging);
+}, { passive: true });
+document.addEventListener("mouseleave", () => dot.classList.remove("on"));
+window.addEventListener("blur", () => dot.classList.remove("on"));
+
+/* ═════════ Intro: splash → film → archive ═════════ */
+const MIN_SPLASH = 1150, MAX_SPLASH = 9000;
+const t0 = performance.now();
+const need = N + 1;
+let got = 0, filmReady = false, filmFailed = false, splashDone = false, introDone = false;
+let filmStarted = false, filmTimers = [];
+
+function setBar(v) { bar.style.transform = `scaleX(${clamp(v, 0, 1).toFixed(3)})`; }
+setBar(.04);
+function tick() {
+  got++;
+  setBar(.04 + .88 * (got / need));
+  if (got >= need) setTimeout(endSplash, Math.max(0, MIN_SPLASH - (performance.now() - t0)));
+}
+function markFilm(ok) {
+  if (filmReady) return;
+  filmReady = true;
+  if (!ok) filmFailed = true;
+  tick();
+}
+
+IMGS.forEach((it, i) => { makeThumb(it).then(url => { applyThumb(i, url); tick(); }); });
+
+function setRate() { try { film.defaultPlaybackRate = 2; film.playbackRate = 2; } catch (e) { /* ignore */ } }
+if (SITE.film) {
+  film.addEventListener("loadedmetadata", setRate);
+  film.addEventListener("loadeddata", () => markFilm(true));
+  film.addEventListener("canplay", () => markFilm(true));
+  film.addEventListener("error", () => {
+    markFilm(false);
+    filmFailed = true;
+    if (splashDone && !introDone) showFallback(true);
+  });
+  film.addEventListener("playing", () => {
+    if (!splashDone) { film.pause(); try { film.currentTime = 0; } catch (e) { /* ignore */ } return; }
+    setRate();
+    filmStarted = true;
+    intro.classList.remove("nofilm");
+    film.classList.add("on");
+  });
+  film.addEventListener("timeupdate", () => {
+    if (!splashDone || introDone || !film.duration || !isFinite(film.duration)) return;
+    if ((film.duration - film.currentTime) / (film.playbackRate || 2) < .75) finishIntro();
+  });
+  film.addEventListener("ended", () => { if (splashDone) finishIntro(); });
+  setRate();
+  film.src = SITE.film;
+} else {
+  markFilm(false);
+}
+
+setTimeout(endSplash, MAX_SPLASH);
+
+function endSplash() {
+  if (splashDone) return;
+  splashDone = true;
+  setBar(1);
+  setTimeout(() => {
+    splash.classList.add("out");
+    startFilm();
+    setTimeout(() => splash.remove(), 950);
+  }, 380);
+}
+
+function showFallback(finishSoon) {
+  intro.classList.add("nofilm");
+  film.classList.remove("on");
+  if (finishSoon) filmTimers.push(setTimeout(finishIntro, 1700));
+}
+
+function tryPlay() {
+  if (introDone || !film.paused || filmFailed) return;
+  setRate();
+  const p = film.play();
+  if (p && p.catch) p.catch(() => { if (!filmStarted) intro.classList.add("nofilm"); });
+}
+
+function startFilm() {
+  intro.classList.add("ready");
+  if (filmFailed || !SITE.film) { showFallback(true); return; }
+  try { film.currentTime = 0; } catch (e) { /* ignore */ }
+  tryPlay();
+  ["pointerdown", "keydown", "touchstart"].forEach(t => window.addEventListener(t, tryPlay, { once: true, passive: true }));
+  /* If the film never starts, reveal the site anyway */
+  filmTimers.push(setTimeout(() => {
+    if (!introDone && (film.paused || !filmStarted)) { intro.classList.add("nofilm"); finishIntro(); }
+  }, 2600));
+  /* Safety cap in case 'ended' never arrives */
+  filmTimers.push(setTimeout(finishIntro, 16000));
+}
+
+function finishIntro() {
+  if (introDone) return;
+  introDone = true;
+  filmTimers.forEach(clearTimeout);
+  ["pointerdown", "keydown", "touchstart"].forEach(t => window.removeEventListener(t, tryPlay));
+  intro.classList.add("closing");
+  const veil = reduced.matches ? 150 : 700;
+  setTimeout(() => {
+    window.scrollTo(0, 0);
+    body.classList.remove("locked");
+    body.classList.add("revealed");
+    revealed = true;
+    intro.classList.add("gone");
+    setTimeout(() => {
+      try { film.pause(); film.removeAttribute("src"); film.load(); } catch (e) { /* ignore */ }
+      intro.remove();
+    }, 1050);
+  }, veil);
+}
+skipBtn.addEventListener("click", finishIntro);
+
+})();
+</script>
+</body>
+</html>
