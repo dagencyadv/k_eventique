@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>K Eventique — Luxury Events &amp; Weddings</title>
+<title>K Eventique | Luxury Events &amp; Weddings</title>
 <meta name="description" content="K Eventique creates exceptional luxury weddings, private celebrations, corporate events and immersive experiences through thoughtful design, production and event direction.">
 <meta name="theme-color" content="#050505">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -608,7 +608,7 @@ html.fine select{cursor:pointer!important}
 (() => {
 "use strict";
 
-/* ═════════ Central configuration — edit here ═════════ */
+/* ═════════ Central configuration: edit here ═════════ */
 const SITE = {
   brand: "K Eventique",
   email: "ismael.kaoud@keventique.com",
@@ -617,7 +617,7 @@ const SITE = {
   locations: ["Cairo", "Dubai", "Riyadh"],
   instagram: "https://www.instagram.com/k_eventique/",
   facebook: "https://www.facebook.com/byismaelkaoud",
-  /* Intro film — first playable source wins (H.264 copy first, original HEVC as backup) */
+  /* Intro film: first playable source wins (H.264 copy first, original HEVC as backup) */
   filmPoster: "media/intro-eye-poster.jpg",
   film: [
     { src: "media/intro-eye.mp4", type: 'video/mp4; codecs="avc1.640028"' },
@@ -635,7 +635,7 @@ const SITE = {
     { id: "architecture", title: "The Architecture", category: "PRIVATE", place: "Riyadh · Saudi Arabia",
       src: "https://images.unsplash.com/photo-1571896349842-33c89424de2d",
       alt: "Modern pavilion and pool lit at blue hour",
-      note: "We read a venue the way an architect reads a site — for its lines, its shadows and the way people will move through it." },
+      note: "We read a venue the way an architect reads a site, for its lines, its shadows and the way people will move through it." },
     { id: "table", title: "The Table", category: "WEDDING", place: "Cairo · Egypt",
       src: "https://images.unsplash.com/photo-1561912774-79769a0a0a7a",
       alt: "Reception table set with white linen, crystal glasses and soft roses",
@@ -651,7 +651,7 @@ const SITE = {
     { id: "flowers", title: "The Flowers", category: "DESTINATION", place: "Mykonos · Greece",
       src: "https://images.unsplash.com/photo-1529636798458-92182e662485",
       alt: "Floral installation of garden roses on a timber arch draped in linen",
-      note: "Florals treated as architecture — grown into the structure, never simply placed upon it." },
+      note: "Florals treated as architecture, grown into the structure, never simply placed upon it." },
     { id: "entrance", title: "The Entrance", category: "BRAND", place: "Dubai · UAE",
       src: "https://images.unsplash.com/photo-1566737236500-c8ac43014a67",
       alt: "Guests walking through a corridor of linear light",
@@ -671,11 +671,11 @@ const SITE = {
     { id: "bridal-room", title: "The Bridal Room", category: "WEDDING", place: "Cairo · Egypt",
       src: "https://images.unsplash.com/photo-1550005809-91ad75fb315f",
       alt: "Bride holding a bouquet of soft roses and eucalyptus beside the groom",
-      note: "The hours before are part of the evening — calm, unhurried, quietly prepared." },
+      note: "The hours before are part of the evening. Calm, unhurried, quietly prepared." },
     { id: "setting", title: "The Setting", category: "DESTINATION", place: "Vík · Iceland",
       src: "https://images.unsplash.com/photo-1544078751-58fee2d8a03b",
       alt: "Couple on a black sand beach with sea stacks behind them",
-      note: "Some places need no decoration — only the discipline to leave them as they are." },
+      note: "Some places need no decoration, only the discipline to leave them as they are." },
     { id: "dinner", title: "The Dinner", category: "DESTINATION", place: "Mykonos · Greece",
       src: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622",
       alt: "Long dinner table with glassware, candles and seasonal flowers",
@@ -707,7 +707,7 @@ const SITE = {
     { id: "last-frame", title: "The Last Frame", category: "WEDDING", place: "Sinai · Egypt",
       src: "https://images.unsplash.com/photo-1532712938310-34cb3982ef74",
       alt: "Couple walking hand in hand across an open landscape under a pale sky",
-      note: "When the guests have gone and the light is almost spent — the frame we design everything towards." }
+      note: "When the guests have gone and the light is almost spent. The frame we design everything towards." }
   ]
 };
 
@@ -754,7 +754,7 @@ function sized(src, w, h, q) {
       u.searchParams.set("q", q);
       return u.href;
     }
-  } catch (e) { /* relative or invalid URL — use as is */ }
+  } catch (e) { /* relative or invalid URL: use as is */ }
   return src;
 }
 const fullSrc = it => it.tall ? sized(it.src, 1600, 2000, 82) : sized(it.src, 2400, 1600, 82);
@@ -825,7 +825,7 @@ for (let i = 0; i < N; i++) {
   el.tabIndex = 0;
   el.dataset.i = i;
   el.setAttribute("role", "button");
-  el.setAttribute("aria-label", `${it.title} — ${CATS[it.category].label}, ${it.place}. Open project`);
+  el.setAttribute("aria-label", `${it.title}, ${CATS[it.category].label}, ${it.place}. Open project`);
   const fig = document.createElement("figure");
   const img = document.createElement("img");
   img.alt = it.alt;
@@ -848,7 +848,7 @@ const gItems = [];
     b.className = "g-item";
     b.dataset.i = i;
     b.style.setProperty("--k", i);
-    b.setAttribute("aria-label", `${it.title} — ${CATS[it.category].label}, ${it.place}. Open project`);
+    b.setAttribute("aria-label", `${it.title}, ${CATS[it.category].label}, ${it.place}. Open project`);
     b.innerHTML = `<span class="g-img"><img alt="${esc(it.alt)}" loading="lazy" decoding="async" draggable="false"></span>` +
       `<span class="g-cap"><span class="g-cat">${esc(numbering[i])}</span><span class="g-t">${esc(it.title)}</span><span class="g-place">${esc(it.place)}</span></span>`;
     f.appendChild(b);
@@ -902,7 +902,7 @@ async function makeThumb(it) {
     const blob = await new Promise((res, rej) => c.toBlob(b => b ? res(b) : rej(new Error("blob")), "image/webp", .88));
     return URL.createObjectURL(blob);
   } catch (e) {
-    return src; /* canvas or CORS failed — use the original URL */
+    return src; /* canvas or CORS failed: use the original URL */
   }
 }
 function applyThumb(i, url) {
@@ -1135,7 +1135,7 @@ function flipTransform(from, to) {
 }
 function fillLit(i) {
   const it = IMGS[i];
-  $("#litKick").textContent = `${numbering[i]} — ${pad2(i + 1)} / ${N}`;
+  $("#litKick").textContent = `${numbering[i]} · ${pad2(i + 1)} / ${N}`;
   $("#litTitle").textContent = it.title;
   $("#litWhere").textContent = `${CATS[it.category].label} · ${city(it)}`;
   $("#litNote").textContent = it.note;
@@ -1249,9 +1249,9 @@ $("#litNext").addEventListener("click", () => stepLit(1));
 /* ═════════ Grid ═════════ */
 let gridFilter = "all";
 const GRID_COPY = {
-  all:      { kick: "Selected Work", title: "The Archive", sub: "Twenty-one frames from weddings, celebrations and productions — one complete evening, from the arrival to the last frame.", svc: [] },
-  weddings: { kick: "Wedding — Selected Work", title: "Weddings", sub: "From the first look to the last frame. Weddings designed as a single, continuous story, at home or across the world.", svc: ["Weddings"] },
-  events:   { kick: "Events & Production — Selected Work", title: "Events", sub: "Corporate evenings, brand moments, galas and private celebrations — designed, produced and directed end to end.", svc: ["Events", "Production"] }
+  all:      { kick: "Selected Work", title: "The Archive", sub: "Twenty-one frames from weddings, celebrations and productions. One complete evening, from the arrival to the last frame.", svc: [] },
+  weddings: { kick: "Wedding · Selected Work", title: "Weddings", sub: "From the first look to the last frame. Weddings designed as a single, continuous story, at home or across the world.", svc: ["Weddings"] },
+  events:   { kick: "Events & Production · Selected Work", title: "Events", sub: "Corporate evenings, brand moments, galas and private celebrations, designed, produced and directed end to end.", svc: ["Events", "Production"] }
 };
 function setFilter(f) {
   gridFilter = GRID_COPY[f] ? f : "all";
@@ -1269,6 +1269,28 @@ function setFilter(f) {
     if (show) b.style.setProperty("--k", k++);
   });
 }
+/* Remember the current section so a refresh returns to it (#weddings, #contact, ...) */
+const ROUTES = ["archive", "weddings", "events", "journal", "studio", "contact"];
+const ROUTE_KEY = "keventique.route";
+function setRoute(key) {
+  key = ROUTES.includes(key) ? key : "";
+  try { history.replaceState(null, "", key ? "#" + key : location.pathname + location.search); } catch (e) { /* ignore */ }
+  try { key ? sessionStorage.setItem(ROUTE_KEY, key) : sessionStorage.removeItem(ROUTE_KEY); } catch (e) { /* storage blocked */ }
+}
+function readRoute() {
+  const h = (location.hash || "").slice(1).toLowerCase();
+  if (ROUTES.includes(h)) return h;
+  try { const v = sessionStorage.getItem(ROUTE_KEY); if (ROUTES.includes(v)) return v; } catch (e) { /* storage blocked */ }
+  return "";
+}
+function applyRoute(key) {
+  if (key === "archive") openGrid("all");
+  else if (key === "weddings" || key === "events") openGrid(key);
+  else if (key) openPanel(key);
+  else toExperience();
+}
+const initialRoute = readRoute();
+
 function openGrid(f) {
   closePanel();
   setFilter(f || gridFilter);
@@ -1278,6 +1300,7 @@ function openGrid(f) {
   grid.scrollTop = 0;
   gridBtn.setAttribute("aria-pressed", "true");
   setCurrent(gridFilter === "weddings" ? "weddings" : gridFilter === "events" ? "events" : "");
+  setRoute(gridFilter === "all" ? "archive" : gridFilter);
 }
 function closeGrid() {
   if (!body.classList.contains("gridview")) return;
@@ -1286,9 +1309,10 @@ function closeGrid() {
   grid.setAttribute("aria-hidden", "true");
   gridBtn.setAttribute("aria-pressed", "false");
   setCurrent("experience");
+  setRoute("");
 }
 gridBtn.addEventListener("click", () => body.classList.contains("gridview") ? closeGrid() : openGrid("all"));
-$$(".g-filters button").forEach(b => b.addEventListener("click", () => { setFilter(b.dataset.f); setCurrent(b.dataset.f === "all" ? "" : b.dataset.f); }));
+$$(".g-filters button").forEach(b => b.addEventListener("click", () => { setFilter(b.dataset.f); setCurrent(b.dataset.f === "all" ? "" : b.dataset.f); setRoute(b.dataset.f === "all" ? "archive" : b.dataset.f); }));
 gList.addEventListener("click", e => {
   const b = e.target.closest(".g-item");
   if (b) openLit(+b.dataset.i, b.querySelector(".g-img"));
@@ -1298,16 +1322,16 @@ setFilter("all");
 /* ═════════ Panels: Studio, Journal, Contact ═════════ */
 const JOURNAL = [
   { img: 0, title: "On Arrival", text: "The evening does not begin at the door. It begins at the kerb, in the scent of the garden, in the first view of the room through an open archway. We design that approach as carefully as the table." },
-  { img: 9, title: "Notes on Light", text: "We plan light hour by hour — the colour of the sky at the ceremony, the moment candles take over, the point where the dance floor deserves its own weather. Light decides what guests remember." },
+  { img: 9, title: "Notes on Light", text: "We plan light hour by hour: the colour of the sky at the ceremony, the moment candles take over, the point where the dance floor deserves its own weather. Light decides what guests remember." },
   { img: 13, title: "The Long Table", text: "A long table changes how people speak to one another. It asks for fewer centrepieces, lower florals, longer evenings. An evening designed around conversation, movement and the view beyond the table." },
   { img: 14, title: "Production, Unseen", text: "The finest production goes unnoticed: cables that vanish, cues that land on the breath of a speech, a change of scene that feels like the room simply decided to transform." }
 ];
 const PANELS = {
   studio: () => `
-    <p class="kick">${esc(SITE.brand)} — Studio</p>
+    <p class="kick">${esc(SITE.brand)} · Studio</p>
     <h2 class="p-h" tabindex="-1">Nothing is accidental. <em>Nothing is ordinary.</em></h2>
     <div class="p-lede">
-      <p>${esc(SITE.brand)} is a creative house for weddings, private celebrations and events. We design the atmosphere before the guests arrive — from the architecture of the room to the rhythm of the evening.</p>
+      <p>${esc(SITE.brand)} is a creative house for weddings, private celebrations and events. We design the atmosphere before the guests arrive, from the architecture of the room to the rhythm of the evening.</p>
       <p>Each project is led by a small studio team that stays with it from the first conversation to the final frame: concept, design, production and direction on the day. Intimate dinners and evenings for a thousand guests receive the same attention.</p>
     </div>
     <div class="p-rule"></div>
@@ -1330,7 +1354,7 @@ const PANELS = {
       <button type="button" class="tlink" data-act="contact">Begin a conversation</button>
     </div>`,
   journal: () => `
-    <p class="kick">${esc(SITE.brand)} — Journal</p>
+    <p class="kick">${esc(SITE.brand)} · Journal</p>
     <h2 class="p-h" tabindex="-1">Notes from the studio.</h2>
     <div class="j-list">${JOURNAL.map((j, n) => `
       <article class="j-item">
@@ -1362,7 +1386,7 @@ const PANELS = {
         <label class="f" for="enqPhone"><span>WhatsApp number</span><input id="enqPhone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+20 10 0000 0000" required></label>
         <label class="f" for="enqService"><span>Service</span><select id="enqService" name="service" required><option value="">Select a service</option>${opts}<option value="Something else">Something else</option></select></label>
       </div>
-      <label class="f" for="enqNote"><span>The occasion <i>— date, place, guests (optional)</i></span><textarea id="enqNote" name="note" rows="3"></textarea></label>
+      <label class="f" for="enqNote"><span>The occasion <i>(date, place, guests, optional)</i></span><textarea id="enqNote" name="note" rows="3"></textarea></label>
       <p class="f-err" id="enqErr" role="alert"></p>
       <div class="f-actions"><button type="submit" class="btn btn-solid">Continue</button></div>
       <div class="f-done" id="enqDone" hidden>
@@ -1378,7 +1402,7 @@ const PANELS = {
       ? "Enquiries are currently received by direct message on Instagram. Share the date, the place and the feeling you have in mind."
       : "Share the date, the place and the feeling you have in mind. Every enquiry is read by the studio.";
     return `
-    <p class="kick">${esc(SITE.brand)} — Contact</p>
+    <p class="kick">${esc(SITE.brand)} · Contact</p>
     <h2 class="p-h" tabindex="-1">Begin a <em>conversation.</em></h2>
     <div class="p-lede"><p>${esc(lead)}</p><p>We take on a limited number of weddings and events each season, so that every project receives the full attention of the studio.</p></div>
     <div class="p-rule"></div>
@@ -1399,6 +1423,7 @@ function openPanel(type) {
   panel.setAttribute("aria-label", type.charAt(0).toUpperCase() + type.slice(1));
   panel.scrollTop = 0;
   setCurrent(type);
+  setRoute(type);
   setTimeout(() => { const h = $(".p-h", panelBody); if (h && !body.classList.contains("menuopen")) h.focus({ preventScroll: true }); }, 450);
 }
 function closePanel() {
@@ -1407,6 +1432,7 @@ function closePanel() {
   panel.inert = true;
   panel.setAttribute("aria-hidden", "true");
   setCurrent("experience");
+  setRoute("");
 }
 function enquiryText(d) {
   return [`Hello ${SITE.brand},`, "", `Name: ${d.name}`, `Email: ${d.email}`, `WhatsApp: ${d.phone}`, `Service: ${d.service}`]
@@ -1435,8 +1461,8 @@ panelBody.addEventListener("submit", e => {
   const text = enquiryText(d);
   const wa = $("#enqWa", f), mail = $("#enqMail", f);
   if (wa) wa.href = `${SITE.whatsapp}${SITE.whatsapp.includes("?") ? "&" : "?"}text=${encodeURIComponent(text)}`;
-  if (mail) mail.href = `mailto:${SITE.email}?subject=${encodeURIComponent("Enquiry — " + d.service)}&body=${encodeURIComponent(text)}`;
-  $("#enqDoneT", f).textContent = `Thank you, ${d.name.split(" ")[0]}. Your enquiry is ready — send it to the studio on WhatsApp or by email.`;
+  if (mail) mail.href = `mailto:${SITE.email}?subject=${encodeURIComponent("Enquiry: " + d.service)}&body=${encodeURIComponent(text)}`;
+  $("#enqDoneT", f).textContent = `Thank you, ${d.name.split(" ")[0]}. Your enquiry is ready. Send it to the studio on WhatsApp or by email.`;
   $(".f-actions", f).hidden = true;
   $("#enqDone", f).hidden = false;
   (wa || mail).focus({ preventScroll: true });
@@ -1479,7 +1505,14 @@ function toExperience() {
   explored = false; dragTravel = 0;
   window.scrollTo(0, 0);
   setCurrent("experience");
+  setRoute("");
 }
+window.addEventListener("hashchange", () => {
+  if (!introDone) return;
+  const h = (location.hash || "").slice(1).toLowerCase();
+  closeLit(); setMenu(false);
+  applyRoute(ROUTES.includes(h) ? h : "");
+});
 menuBtn.addEventListener("click", () => setMenu(!body.classList.contains("menuopen")));
 $("#logo").addEventListener("click", () => { setMenu(false); toExperience(); });
 menu.addEventListener("click", e => {
@@ -1647,6 +1680,7 @@ function tryPlay() {
 }
 
 function startFilm() {
+  if (initialRoute) { finishIntro(); return; } /* returning to a section: go straight there */
   intro.classList.add("ready");
   if (filmFailed || !filmSrc) { showFallback(true); return; }
   try { film.currentTime = 0; } catch (e) { /* ignore */ }
@@ -1666,9 +1700,10 @@ function finishIntro() {
   filmTimers.forEach(clearTimeout);
   ["pointerdown", "keydown", "touchstart"].forEach(t => window.removeEventListener(t, tryPlay));
   intro.classList.add("closing");
-  const veil = reduced.matches ? 150 : 700;
+  const veil = (reduced.matches || initialRoute) ? 150 : 700;
   setTimeout(() => {
     window.scrollTo(0, 0);
+    if (initialRoute) applyRoute(initialRoute);
     body.classList.remove("locked");
     body.classList.add("revealed");
     revealed = true;
