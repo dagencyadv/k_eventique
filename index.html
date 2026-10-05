@@ -249,6 +249,7 @@ body.panelopen #panel{opacity:1;visibility:visible;pointer-events:auto;transitio
 .p-in{max-width:1240px;margin:0 auto;padding:calc(130px + var(--safe-top)) calc(var(--pad) + var(--safe-right)) calc(100px + var(--safe-bottom)) calc(var(--pad) + var(--safe-left));transform:translateY(16px);transition:transform 1s var(--ease)}
 body.panelopen .p-in{transform:none}
 .p-h{font-family:var(--serif);font-weight:400;font-size:clamp(36px,5.6vw,86px);line-height:1.02;letter-spacing:-.01em;margin:18px 0 0;max-width:15ch}
+.p-h:focus,.p-h:focus-visible{outline:none}
 .p-h em{font-style:italic;color:rgba(244,241,235,.78)}
 .p-lede{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px 56px;margin-top:clamp(36px,5vw,72px);color:rgba(244,241,235,.72);font-size:15px;line-height:1.75}
 .p-rule{height:1px;background:rgba(244,241,235,.12);margin:clamp(48px,6vw,88px) 0 28px;position:relative}
@@ -273,6 +274,23 @@ body.panelopen .p-in{transform:none}
 .j-item h3{font-family:var(--serif);font-weight:400;font-size:clamp(26px,3vw,42px);line-height:1.1;margin:14px 0 16px}
 .j-item p{color:rgba(244,241,235,.7);max-width:46ch}
 .c-grid{display:flex;flex-wrap:wrap;gap:32px 72px}
+.c-grid dd.addr{display:flex;flex-direction:column;font-size:clamp(16px,1.4vw,19px)}
+.lit-film{margin-top:12px;min-height:36px}
+.lit-film[hidden]{display:none}
+.founder{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:32px 64px;align-items:center}
+.founder-photo{overflow:hidden;border-radius:2px;background:#0a0a0a;max-width:420px}
+.founder-photo img{width:100%;aspect-ratio:4/5;object-fit:cover;filter:grayscale(1) contrast(1.05)}
+.founder-text h3{font-family:var(--serif);font-weight:400;font-size:clamp(32px,4vw,56px);line-height:1.05;margin:12px 0 18px}
+.founder-text p{color:rgba(244,241,235,.74);max-width:56ch}
+.founder-st{margin-top:14px;font-family:var(--serif);font-style:italic;font-size:17px;color:rgba(244,241,235,.86)!important}
+.stats{display:flex;gap:48px;margin:28px 0 8px}
+.stats dt{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim);order:2}
+.stats div{display:flex;flex-direction:column-reverse;gap:4px}
+.stats dd{font-family:var(--serif);font-size:clamp(38px,4.4vw,60px);line-height:1;font-variant-numeric:lining-nums}
+.tlink svg{width:16px;height:16px}
+.logos{margin-top:clamp(36px,5vw,64px);max-width:1100px}
+.logos img{width:100%;height:auto;opacity:.9}
+.p-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .c-grid>div{min-width:0;max-width:100%}
 .c-grid dd{overflow-wrap:anywhere}
 .sel{user-select:text;-webkit-user-select:text}
@@ -429,6 +447,7 @@ html.fine select{cursor:pointer!important}
   .p-steps{grid-template-columns:repeat(2,minmax(0,1fr))}
   .p-cols{grid-template-columns:repeat(2,minmax(0,1fr))}
   .j-item{grid-template-columns:1fr}
+  .founder{grid-template-columns:1fr}
   .j-item:nth-child(even) .j-media{order:0}
 }
 @media (max-width:768px){
@@ -452,7 +471,7 @@ html.fine select{cursor:pointer!important}
   .g-cap{position:static;opacity:1;transform:none;background:none;padding:9px 2px 4px}
   .g-t{font-size:16px}
   .g-filters{gap:18px}
-  .p-cols,.p-steps,.f-row{grid-template-columns:1fr}
+  .p-cols,.p-steps,.f-row,.p-cols-2{grid-template-columns:1fr}
   .c-grid{flex-direction:column;gap:26px}
   .btn{width:100%}
   .m-foot{flex-direction:column;align-items:center;text-align:center}
@@ -543,9 +562,10 @@ html.fine select{cursor:pointer!important}
     <li><button type="button" data-go="experience" style="--k:0">The Experience</button></li>
     <li><button type="button" data-go="weddings" style="--k:1">Weddings</button></li>
     <li><button type="button" data-go="events" style="--k:2">Events</button></li>
-    <li><button type="button" data-go="journal" style="--k:3">Journal</button></li>
-    <li><button type="button" data-go="studio" style="--k:4">Studio</button></li>
-    <li><button type="button" data-go="contact" style="--k:5">Contact</button></li>
+    <li><button type="button" data-go="clients" style="--k:3">Clients</button></li>
+    <li><button type="button" data-go="journal" style="--k:4">Journal</button></li>
+    <li><button type="button" data-go="studio" style="--k:5">Studio</button></li>
+    <li><button type="button" data-go="contact" style="--k:6">Contact</button></li>
   </ul>
   <div class="m-foot">
     <p data-site="locations">Cairo · Dubai · Riyadh</p>
@@ -569,6 +589,7 @@ html.fine select{cursor:pointer!important}
       </div>
       <div>
         <p class="note" id="litNote"></p>
+        <a class="tlink lit-film" id="litFilm" target="_blank" rel="noopener" hidden>Watch the film</a>
         <div class="nav">
           <button type="button" id="litPrev" aria-label="Previous project">Previous</button>
           <button type="button" id="litNext" aria-label="Next project">Next</button>
@@ -617,6 +638,29 @@ const SITE = {
   locations: ["Cairo", "Dubai", "Riyadh"],
   instagram: "https://www.instagram.com/k_eventique/",
   facebook: "https://www.facebook.com/byismaelkaoud",
+  telephone: "+20 100 42 77777",
+  addresses: ["Kilo 17 Cairo Alex Road, Palm Heights Compound", "Four Seasons First Residence"],
+  showreel: { title: "Show Reel · Libya Projects", url: "https://www.youtube.com/watch?v=gJn4S1Mfhls" },
+  founder: {
+    name: "Ismael Kaoud",
+    photo: "media/founder.jpg",
+    instagram: "https://www.instagram.com/ismaelkaoud/",
+    bio: "A 34 years old, CEO of K-Eventique, CEO of Kle, Co-Founder of Kayan, and Co-Founder of Pro Event. Have been working in the field of organizing weddings and events for 12 years & have organized more than 500 events during the 12 years.",
+    statement: "Provides creative design services and comprehensive event planning. Passionate about transforming ideas into memorable experiences by incorporating each client's personality, hobbies, and passions into weddings and corporate events.",
+    stats: [["500+", "Events"], ["12", "Years"]]
+  },
+  clientsImage: "media/clients.jpg",
+  clients: ["Red Bull", "Juhayna", "Pepsi", "Keglevich", "Stoli", "Blue 40", "Valmont Cuvée Aida", "Heineken", "Chivas", "Hayat", "EDNC Eastown District New Cairo",
+    "Audi", "Mercedes-Benz", "Volvo", "Alfa Romeo", "Abou Ghaly Motors", "El Kersh", "Uber", "Ezz Elarab", "London Cab", "Travco Group", "SODIC",
+    "Philip Morris", "British American Tobacco", "Davidoff", "Aston Martin", "Mangroovy", "El Gouna", "Orascom Development", "Vans", "Bershka", "The Three Corners", "Galambo",
+    "Samsung", "Nike", "Sea Ray", "Quiksilver", "Nialaya", "GG & Grace", "Al Sagheer", "Ancient Sands", "Club 88", "Azimut Yachts",
+    "Rituals", "The Lemon Tree & Co.", "Vodafone", "The Smokery", "Sia", "Aldar", "Emaar", "People & Places", "Tatweer Misr", "Maa'soom", "Tradeline", "Nobu"],
+  previousEvents: ["Opening of Nobu New Cairo", "SODIC Christmas 2025", "Rixos Premium Magawish New Year's Event", "Samsung Galaxy A7 Launch Event",
+    "Saber Rebai Concert", "Jewar Launch Event", "Benghazi University Opening in Libya", "Tradeline Opening, Mall of Arabia", "Derna Stadium Opening",
+    "ICSB Gala Dinner", "Pearl Hotel Opening", "Galamboo x Vodafone Red", "Karama Equestrian Festival in Libya", "Smokery New Year's Event", "Tripoli International Fair",
+    "SODIC Plaza Suhoor", "Nobu North Coast", "The Lemon Tree"],
+  weddings: ["Prince Mohamed Ali Palace", "Four Seasons Alexandria · Amr & Haidy", "Four Seasons First Residence · Abdelhalim & Farah",
+    "The St. Regis Cairo · Haridy & Nora", "Four Seasons First Residence · Ouhod Wedding"],
   /* Intro film: first playable source wins (H.264 copy first, original HEVC as backup) */
   filmPoster: "media/intro-eye-poster.jpg",
   film: [
@@ -624,90 +668,90 @@ const SITE = {
     { src: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260922_195107_ed3f055a-3a13-4a71-b743-e10310454246.mp4", type: 'video/mp4; codecs="hvc1"' }
   ],
   images: [
-    { id: "arrival", title: "The Arrival", category: "WEDDING", place: "Dubai · UAE",
-      src: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa",
-      alt: "White villa venue with palm trees and a reflecting pool at dusk",
-      note: "The first impression begins before the guests enter. Water, stone and the last of the evening light form the threshold." },
-    { id: "first-look", title: "The First Look", category: "WEDDING", place: "Cairo · Egypt",
-      src: "https://images.unsplash.com/photo-1519741497674-611481863552",
-      alt: "Bride and groom backlit by low sun, holding a bouquet",
-      note: "A quiet moment before the room fills, when the entire evening still belongs to two people." },
-    { id: "architecture", title: "The Architecture", category: "PRIVATE", place: "Riyadh · Saudi Arabia",
-      src: "https://images.unsplash.com/photo-1571896349842-33c89424de2d",
-      alt: "Modern pavilion and pool lit at blue hour",
-      note: "We read a venue the way an architect reads a site, for its lines, its shadows and the way people will move through it." },
-    { id: "table", title: "The Table", category: "WEDDING", place: "Cairo · Egypt",
-      src: "https://images.unsplash.com/photo-1561912774-79769a0a0a7a",
-      alt: "Reception table set with white linen, crystal glasses and soft roses",
-      note: "Linen, glass and low florals, composed so that every guest can see every face." },
-    { id: "ceremony", title: "The Ceremony", category: "WEDDING", place: "North Coast · Egypt",
-      src: "https://images.unsplash.com/photo-1469371670807-013ccf25f16a",
-      alt: "Ceremony aisle lined with tall floral arrangements leading to a draped arch",
-      note: "An aisle measured in steps and silence. The ceremony is designed around the pause before the vows." },
-    { id: "details", title: "The Details", category: "WEDDING", place: "Dubai · UAE",
-      src: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8",
-      alt: "Two wedding bands resting on pale peonies",
-      note: "Paper weight, ink colour, the fold of a napkin. Every detail has a purpose." },
-    { id: "flowers", title: "The Flowers", category: "DESTINATION", place: "Mykonos · Greece",
-      src: "https://images.unsplash.com/photo-1529636798458-92182e662485",
-      alt: "Floral installation of garden roses on a timber arch draped in linen",
-      note: "Florals treated as architecture, grown into the structure, never simply placed upon it." },
-    { id: "entrance", title: "The Entrance", category: "BRAND", place: "Dubai · UAE",
-      src: "https://images.unsplash.com/photo-1566737236500-c8ac43014a67",
-      alt: "Guests walking through a corridor of linear light",
-      note: "A corridor of light that edits the outside world away before the evening begins." },
-    { id: "dance", title: "The Dance", category: "WEDDING", place: "Alexandria · Egypt",
-      src: "https://images.unsplash.com/photo-1460978812857-470ed1c77af0",
-      alt: "Black and white portrait of a couple embracing as the veil lifts in the wind",
-      note: "The room steps back and the light narrows. For three minutes, nothing else is designed to matter." },
-    { id: "light", title: "The Light", category: "CORPORATE", place: "Riyadh · Saudi Arabia",
-      src: "https://images.unsplash.com/photo-1478147427282-58a87a120781",
-      alt: "Raised hands silhouetted in a single beam of stage light",
-      note: "Light is the first material we design with, and the last thing guests remember." },
-    { id: "celebration", title: "The Celebration", category: "PRIVATE", place: "Cairo · Egypt",
-      src: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce",
-      alt: "Guests raising champagne glasses beneath strings of warm light",
-      note: "A toast nobody rehearsed. We build the room so that moments like this can happen on their own." },
-    { id: "bridal-room", title: "The Bridal Room", category: "WEDDING", place: "Cairo · Egypt",
-      src: "https://images.unsplash.com/photo-1550005809-91ad75fb315f",
-      alt: "Bride holding a bouquet of soft roses and eucalyptus beside the groom",
-      note: "The hours before are part of the evening. Calm, unhurried, quietly prepared." },
-    { id: "setting", title: "The Setting", category: "DESTINATION", place: "Vík · Iceland",
-      src: "https://images.unsplash.com/photo-1544078751-58fee2d8a03b",
-      alt: "Couple on a black sand beach with sea stacks behind them",
-      note: "Some places need no decoration, only the discipline to leave them as they are." },
-    { id: "dinner", title: "The Dinner", category: "DESTINATION", place: "Mykonos · Greece",
-      src: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622",
-      alt: "Long dinner table with glassware, candles and seasonal flowers",
-      note: "An evening designed around conversation, movement and the view beyond the table." },
-    { id: "stage", title: "The Stage", category: "PRODUCTION", place: "Riyadh · Saudi Arabia",
-      src: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea",
-      alt: "Stage lit by golden beams above a large audience",
-      note: "Rigging, sound and light engineered to disappear, so that only the performance remains." },
-    { id: "gala", title: "The Gala", category: "GALA", place: "Dubai · UAE",
-      src: "https://images.unsplash.com/photo-1516997121675-4c2d1684aa3e",
-      alt: "Crystal glasses on a dinner table glowing under low coloured light",
-      note: "Black tie, low light and a room tuned to the rhythm of the evening." },
-    { id: "texture", title: "The Texture", category: "PRIVATE", place: "Cairo · Egypt",
-      src: "https://images.unsplash.com/photo-1487530811176-3780de880c2d",
-      alt: "Close view of a bouquet of garden roses, ranunculus and berries",
-      note: "Petal, velvet, aged brass. The close-up is where a room proves it was considered." },
-    { id: "after-dark", title: "After Dark", category: "PRIVATE", place: "Dubai · UAE",
-      src: "https://images.unsplash.com/photo-1574391884720-bbc3740c59d1",
-      alt: "Silhouettes on a dance floor in violet haze",
-      note: "Light, music and architecture transform the room long after sunset." },
-    { id: "destination", title: "The Destination", category: "DESTINATION", place: "Santorini · Greece",
-      src: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff",
-      alt: "White terraces of a Cycladic village above the sea at sunset",
-      note: "A celebration composed for the horizon. The island becomes the venue." },
-    { id: "grand-room", title: "The Grand Room", category: "WEDDING", place: "Cairo · Egypt", tall: true,
-      src: "https://images.unsplash.com/photo-1523438885200-e635ba2c371e",
-      alt: "Domed pavilion at the end of a long aisle of white chairs",
-      note: "Height, symmetry and a single line of sight. The room is built to be walked through slowly." },
-    { id: "last-frame", title: "The Last Frame", category: "WEDDING", place: "Sinai · Egypt",
-      src: "https://images.unsplash.com/photo-1532712938310-34cb3982ef74",
-      alt: "Couple walking hand in hand across an open landscape under a pale sky",
-      note: "When the guests have gone and the light is almost spent. The frame we design everything towards." }
+    { id: "palace-1-arrival", title: "Prince Mohamed Ali Palace I", category: "WEDDING", place: "Prince Mohamed Ali Palace · Cairo",
+      src: "media/events/01.jpg", film: "https://www.instagram.com/p/DK4gyxAsR8-/",
+      alt: "Prince Mohamed Ali Palace façade lit at dusk with the couple's names projected above the entrance",
+      note: "The palace façade lit for the arrival of the guests, the couple's names carried across the stone." },
+    { id: "haridy-nora", title: "Haridy & Nora", category: "WEDDING", place: "The St. Regis · Cairo",
+      src: "media/events/02.jpg", film: "https://drive.google.com/file/d/12MzCYYDquedPP275CHlhqLwbOqw5cJat/view?usp=sharing",
+      alt: "Black and white portrait of the bride and groom at The St. Regis Cairo",
+      note: "A quiet moment between the two of them, away from the room." },
+    { id: "nobu-new-cairo-night", title: "Opening of Nobu New Cairo", category: "BRAND", place: "Nobu · New Cairo",
+      src: "media/events/03.jpg", film: "https://drive.google.com/file/d/1qNNrKgrfr87CW4iMjzNoHQPfPOCBKVFa/view?usp=drive_link",
+      alt: "Flames rising above the Nobu New Cairo building as guests arrive on opening night",
+      note: "Fire, light and a crowd at the threshold on opening night." },
+    { id: "abdelhalim-farah", title: "Abdelhalim & Farah", category: "WEDDING", place: "Four Seasons First Residence · Giza",
+      src: "media/events/04.jpg", film: "https://drive.google.com/file/d/1fhHaQr6lKgWDErvcLfrAlnawAjFU4yUs/view?usp=sharing",
+      alt: "Reception hall with a ceiling of suspended white florals above long dinner tables",
+      note: "A ceiling of white florals suspended over long tables in soft, even light." },
+    { id: "palace-2-courtyard", title: "Prince Mohamed Ali Palace II", category: "WEDDING", place: "Prince Mohamed Ali Palace · Cairo",
+      src: "media/events/05.jpg", film: "https://www.instagram.com/p/DJwLLUSsu7K/",
+      alt: "Palace courtyard dressed in white with sculpted clouds above the stage",
+      note: "The courtyard dressed in white, with sculpted clouds floating above the stage." },
+    { id: "sodic-christmas", title: "SODIC Christmas 2025", category: "CORPORATE", place: "SODIC · Cairo",
+      src: "media/events/06.jpg",
+      alt: "Illuminated Christmas tree with red ornaments and the SODIC sign at night",
+      note: "A season of light across the community: trees, reindeer and lanterns after dark." },
+    { id: "ouhod-wedding", title: "Ouhod Wedding", category: "WEDDING", place: "Four Seasons First Residence · Giza",
+      src: "media/events/07.jpg", film: "https://drive.google.com/file/d/1FgYhf1XDxDIFA4Jyg5cM0tkin21dxaMc/view?usp=sharing",
+      alt: "Aisle framed by tall blush floral columns over a mirrored floor",
+      note: "An aisle framed by blush florals and a mirrored floor that doubles every light." },
+    { id: "nobu-new-cairo-approach", title: "Opening of Nobu New Cairo", category: "BRAND", place: "Nobu · New Cairo",
+      src: "media/events/08.jpg", film: "https://drive.google.com/file/d/1WWjNUBZQuJkr0HEGcd1aCntgXhX6pze3/view?usp=drive_link",
+      alt: "Draped walls and red sculptures lining the approach to Nobu New Cairo at dusk",
+      note: "Draped walls and sculpture marked the approach to the restaurant." },
+    { id: "amr-haidy", title: "Amr & Haidy", category: "WEDDING", place: "Four Seasons · Alexandria",
+      src: "media/events/09.jpg", film: "https://drive.google.com/file/d/15sn3HqC854M8B3O32MlQhxjnnHaYM5Do/view?usp=sharing",
+      alt: "Performers in white carrying glowing spheres through a wedding hall",
+      note: "Performers carrying light through a room styled as a winter landscape." },
+    { id: "benghazi-university", title: "Benghazi University Opening", category: "PRODUCTION", place: "Benghazi · Libya",
+      src: "media/events/10.jpg", film: "https://drive.google.com/file/d/1EIlibrZtc5x_K1pgQrUvUffHeuNCvSea/view?usp=sharing",
+      alt: "Aerial view of fireworks and illuminated buildings at the Benghazi University opening",
+      note: "Fireworks and light over the campus for its opening night." },
+    { id: "saber-rebai", title: "Saber Rebai Concert", category: "PRODUCTION", place: "Live Concert",
+      src: "media/events/11.jpg", film: "https://drive.google.com/file/d/1p9nA-Za-NE5mhbhfDRGH1ciknUg4-yKg/view",
+      alt: "Concert stage with fanned beams of light over a full house",
+      note: "A full stage of light built around a single voice." },
+    { id: "samsung-a7", title: "Samsung Galaxy A7 Launch", category: "BRAND", place: "Launch Event",
+      src: "media/events/12.jpg", film: "https://drive.google.com/file/d/1HtJ86FSCx4iQXEt18JFFP7OqElp_nGmr/view?usp=sharing",
+      alt: "Blue light installation reading Unbox your phone at the Samsung Galaxy launch",
+      note: "A sculpted light installation that framed the launch." },
+    { id: "sodic-suhoor", title: "SODIC Plaza Suhoor", category: "CORPORATE", place: "SODIC Plaza · Cairo",
+      src: "media/events/13.jpg",
+      alt: "Arched gateway and candle lanterns lining a path at night",
+      note: "Lanterns, arches and candlelight for a Ramadan evening." },
+    { id: "palace-1-floor", title: "Prince Mohamed Ali Palace I", category: "WEDDING", place: "Prince Mohamed Ali Palace · Cairo",
+      src: "media/events/14.jpg", film: "https://www.instagram.com/p/DK4gyxAsR8-/",
+      alt: "Circular dance floor surrounded by white tables in the palace gardens",
+      note: "A circular dance floor set in the palace gardens, with the tables gathered around it." },
+    { id: "derna-stadium", title: "Derna Stadium Opening", category: "PRODUCTION", place: "Derna · Libya",
+      src: "media/events/15.jpg", film: "https://drive.google.com/file/d/1JaiGBWD_Y5QjdxoWpFaq7wJCs-VlNlXX/view?usp=drive_link",
+      alt: "Pyrotechnic fountains and flames across the stadium field at night",
+      note: "Pyrotechnics and stage effects for the stadium's opening ceremony." },
+    { id: "pearl-hotel", title: "Pearl Hotel Opening", category: "PRODUCTION", place: "Derna · Libya",
+      src: "media/events/16.jpg", film: "https://drive.google.com/file/d/1Ez0K_R3fScEej5BpQi3WpA6DAcjy8j7Y/view?usp=sharing",
+      alt: "Aerial view of the hotel grounds set with seating and lit for the opening",
+      note: "The hotel and its grounds lit for opening night, seen from above." },
+    { id: "lemon-tree", title: "The Lemon Tree", category: "PRIVATE", place: "The Lemon Tree & Co.",
+      src: "media/events/17.jpg",
+      alt: "Performer in black dancing among guests under a canopy of greenery",
+      note: "Performers moving through the room, among the guests." },
+    { id: "nobu-north-coast", title: "Nobu North Coast", category: "BRAND", place: "Nobu · North Coast",
+      src: "media/events/18.jpg", film: "https://drive.google.com/file/d/1Wq286FpV9x1RNYUspbZStOrpf1WxHXCB/view",
+      alt: "Aerial performer suspended above the stage in front of the lit building",
+      note: "An aerial performance above the stage, framed by the building's façade." },
+    { id: "tripoli-fair", title: "Tripoli International Fair", category: "PRODUCTION", place: "Tripoli · Libya",
+      src: "media/events/19.jpg", film: "https://drive.google.com/file/d/1tLGoeYxUG3X8-cRctUDX2tGAgkE90gBV/view?usp=sharing",
+      alt: "Light beams and projection over the landmark tower of the Tripoli International Fair",
+      note: "Light beams and projection over the fair's landmark building." },
+    { id: "palace-2-stage", title: "Prince Mohamed Ali Palace II", category: "WEDDING", place: "Prince Mohamed Ali Palace · Cairo", tall: true,
+      src: "media/events/20.jpg", film: "https://www.instagram.com/p/DJwLLUSsu7K/",
+      alt: "Stage and dance floor washed in red light under moving beams",
+      note: "The stage and dance floor in red, under moving light." },
+    { id: "smokery-new-year", title: "Smokery New Year's Event", category: "GALA", place: "The Smokery",
+      src: "media/events/21.jpg", film: "https://drive.google.com/file/d/1T9k-9SpxJ_T4-6W9HhgoXqzYfycUvls3/view?usp=sharing",
+      alt: "Neon parrot and brand installations glowing at the Smokery New Year's event",
+      note: "Neon, brand installations and a night built for the countdown." }
   ]
 };
 
@@ -1139,6 +1183,8 @@ function fillLit(i) {
   $("#litTitle").textContent = it.title;
   $("#litWhere").textContent = `${CATS[it.category].label} · ${city(it)}`;
   $("#litNote").textContent = it.note;
+  const lf = $("#litFilm");
+  if (it.film) { lf.href = it.film; lf.hidden = false; } else { lf.hidden = true; lf.removeAttribute("href"); }
   plateImg.alt = it.alt;
   plate.classList.toggle("tall", !!it.tall);
   plateImg.src = thumbs[i] || sized(it.src, 900, it.tall ? 1125 : 600, 70);
@@ -1270,7 +1316,7 @@ function setFilter(f) {
   });
 }
 /* Remember the current section so a refresh returns to it (#weddings, #contact, ...) */
-const ROUTES = ["archive", "weddings", "events", "journal", "studio", "contact"];
+const ROUTES = ["archive", "weddings", "events", "clients", "journal", "studio", "contact"];
 const ROUTE_KEY = "keventique.route";
 function setRoute(key) {
   key = ROUTES.includes(key) ? key : "";
@@ -1323,9 +1369,46 @@ setFilter("all");
 const JOURNAL = [
   { img: 0, title: "On Arrival", text: "The evening does not begin at the door. It begins at the kerb, in the scent of the garden, in the first view of the room through an open archway. We design that approach as carefully as the table." },
   { img: 9, title: "Notes on Light", text: "We plan light hour by hour: the colour of the sky at the ceremony, the moment candles take over, the point where the dance floor deserves its own weather. Light decides what guests remember." },
-  { img: 13, title: "The Long Table", text: "A long table changes how people speak to one another. It asks for fewer centrepieces, lower florals, longer evenings. An evening designed around conversation, movement and the view beyond the table." },
+  { img: 3, title: "The Long Table", text: "A long table changes how people speak to one another. It asks for fewer centrepieces, lower florals, longer evenings. An evening designed around conversation, movement and the view beyond the table." },
   { img: 14, title: "Production, Unseen", text: "The finest production goes unnoticed: cables that vanish, cues that land on the breath of a speech, a change of scene that feels like the room simply decided to transform." }
 ];
+function founderBlock() {
+  const f = SITE.founder;
+  if (!f) return "";
+  return `
+    <section class="founder" aria-label="Founder">
+      <figure class="founder-photo"><img src="${esc(f.photo)}" alt="${esc(f.name)}" loading="lazy" decoding="async"></figure>
+      <div class="founder-text">
+        <p class="kick">Founder</p>
+        <h3>${esc(f.name)}</h3>
+        <p>${esc(f.bio)}</p>
+        <p class="founder-st">${esc(f.statement)}</p>
+        <dl class="stats">${f.stats.map(([n, l]) => `<div><dt>${esc(l)}</dt><dd>${esc(n)}</dd></div>`).join("")}</dl>
+        ${f.instagram ? `<a class="tlink" href="${esc(f.instagram)}" target="_blank" rel="noopener">${ICONS.instagram}<span>@${esc(f.instagram.replace(/^.*instagram\.com\//, "").replace(/\/$/, ""))}</span></a>` : ""}
+      </div>
+    </section>`;
+}
+const PANELS_EXTRA = {
+  clients: () => `
+    <p class="kick">${esc(SITE.brand)} · Clients</p>
+    <h2 class="p-h" tabindex="-1">My <em>clients.</em></h2>
+    <div class="p-lede">
+      <p>Hospitality groups, developers, automotive, fashion and lifestyle brands. ${SITE.founder ? esc(SITE.founder.stats.map(([n, l]) => `${n} ${l.toLowerCase()}`).join(" across ")) + "." : ""}</p>
+      <p>Weddings and events in Egypt and Libya, from intimate celebrations to stadium openings.</p>
+    </div>
+    <figure class="logos"><img src="${esc(SITE.clientsImage)}" alt="Client logos: ${esc(SITE.clients.join(", "))}" loading="lazy" decoding="async"></figure>
+    <ul class="sr">${SITE.clients.map(c => `<li>${esc(c)}</li>`).join("")}</ul>
+    <div class="p-rule"></div>
+    <div class="p-cols p-cols-2">
+      <div class="svc"><h3>Previous events</h3><ul>${SITE.previousEvents.map(e => `<li>${esc(e)}</li>`).join("")}</ul></div>
+      <div class="svc"><h3>Weddings</h3><ul>${SITE.weddings.map(e => `<li>${esc(e)}</li>`).join("")}</ul></div>
+    </div>
+    <div class="p-actions">
+      <button type="button" class="tlink" data-act="grid">View the archive</button>
+      ${SITE.showreel ? `<a class="tlink" href="${esc(SITE.showreel.url)}" target="_blank" rel="noopener">${esc(SITE.showreel.title)}</a>` : ""}
+      <button type="button" class="tlink" data-act="contact">Begin a conversation</button>
+    </div>`
+};
 const PANELS = {
   studio: () => `
     <p class="kick">${esc(SITE.brand)} · Studio</p>
@@ -1334,6 +1417,8 @@ const PANELS = {
       <p>${esc(SITE.brand)} is a creative house for weddings, private celebrations and events. We design the atmosphere before the guests arrive, from the architecture of the room to the rhythm of the evening.</p>
       <p>Each project is led by a small studio team that stays with it from the first conversation to the final frame: concept, design, production and direction on the day. Intimate dinners and evenings for a thousand guests receive the same attention.</p>
     </div>
+    <div class="p-rule"></div>
+    ${founderBlock()}
     <div class="p-rule"></div>
     <p class="kick" style="margin-bottom:28px">Disciplines</p>
     <div class="p-cols">${Object.keys(SERVICES).map(k => `<div class="svc"><h3>${esc(k)}</h3><ul>${SERVICES[k].map(s => `<li>${esc(s)}</li>`).join("")}</ul></div>`).join("")}</div>
@@ -1373,6 +1458,8 @@ const PANELS = {
     const rows = [`<div><dt>Studios</dt><dd>${esc(SITE.locations.join(" · "))}</dd></div>`];
     if (SITE.email) rows.push(`<div><dt>Email</dt><dd><a class="sel" href="mailto:${esc(SITE.email)}">${esc(SITE.email)}</a></dd></div>`);
     if (SITE.phone) rows.push(`<div><dt>WhatsApp</dt><dd>${SITE.whatsapp ? `<a class="sel" href="${esc(SITE.whatsapp)}" target="_blank" rel="noopener">${esc(SITE.phone)}</a>` : `<span class="sel">${esc(SITE.phone)}</span>`}</dd></div>`);
+    if (SITE.telephone) rows.push(`<div><dt>Telephone</dt><dd><span class="sel">${esc(SITE.telephone)}</span></dd></div>`);
+    if (SITE.addresses && SITE.addresses.length) rows.push(`<div><dt>Address</dt><dd class="addr">${SITE.addresses.map(a => `<span class="sel">${esc(a)}</span>`).join("")}</dd></div>`);
     rows.push(`<div><dt>Follow</dt><dd>${socialLinks("soc soc-lg")}</dd></div>`);
     const opts = Object.keys(SERVICES).map(k => `<optgroup label="${esc(k)}">${SERVICES[k].map(s => `<option>${esc(s)}</option>`).join("")}</optgroup>`).join("");
     const form = `
@@ -1412,6 +1499,7 @@ const PANELS = {
   }
 };
 let panelReturn = null;
+Object.assign(PANELS, PANELS_EXTRA);
 function openPanel(type) {
   if (!PANELS[type]) return;
   closeGrid();
